@@ -3,13 +3,110 @@
 @tailwind utilities;
 
 @layer base {
+  /* Dark Theme (Default) */
+  :root {
+    --color-background: #0F0F1A;
+    --color-surface: #1A1A2E;
+    --color-surfaceLight: #252542;
+    --color-textPrimary: #ffffff;
+    --color-textSecondary: #9ca3af;
+    --color-border: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Light Theme */
+  :root.light {
+    --color-background: #f0f2f5;
+    --color-surface: #ffffff;
+    --color-surfaceLight: #e8eaf0;
+    --color-textPrimary: #1a1a2e;
+    --color-textSecondary: #6b7280;
+    --color-border: rgba(0, 0, 0, 0.08);
+  }
+
   body {
-    @apply bg-background text-white antialiased font-sans;
+    @apply bg-background antialiased font-sans;
+    color: var(--color-textPrimary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ===== Light Mode Overrides ===== */
+
+  /* Text colors */
+  :root.light .text-white {
+    color: #1a1a2e !important;
+  }
+  :root.light .text-gray-300 {
+    color: #4b5563 !important;
+  }
+  :root.light .text-gray-400 {
+    color: #6b7280 !important;
+  }
+  :root.light .text-gray-500 {
+    color: #9ca3af !important;
+  }
+  :root.light .text-gray-600 {
+    color: #6b7280 !important;
+  }
+
+  /* Border colors */
+  :root.light .border-white\/5,
+  :root.light .border-white\/10,
+  :root.light .border-white\/20 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Background overrides */
+  :root.light .bg-white\/5,
+  :root.light .bg-white\/10 {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+  }
+  :root.light .hover\:bg-white\/5:hover,
+  :root.light .hover\:bg-white\/10:hover {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* Specific dark-coded backgrounds */
+  :root.light .bg-\[\#2D3748\] {
+    background-color: #e2e8f0 !important;
+  }
+  :root.light .bg-\[\#1A202C\] {
+    background-color: #f7fafc !important;
+  }
+  :root.light .bg-\[\#1A202C\]\/60 {
+    background-color: rgba(247, 250, 252, 0.6) !important;
+  }
+  :root.light .bg-\[\#4A5568\]\/40 {
+    background-color: rgba(226, 232, 240, 0.5) !important;
+  }
+  :root.light .bg-\[\#2D3748\]\/50 {
+    background-color: rgba(226, 232, 240, 0.5) !important;
+  }
+
+  /* Purple accent adjustments for light mode */
+  :root.light .text-\[\#b18cff\] {
+    color: #7c3aed !important;
+  }
+  :root.light .text-\[\#667eea\] {
+    color: #4f46e5 !important;
+  }
+
+  /* Surface-based borders and shadows for light mode */
+  :root.light .shadow-\[0_10px_30px_rgba\(102\,126\,234\,0\.15\)\] {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Footer text */
+  :root.light footer {
+    border-color: rgba(0, 0, 0, 0.06) !important;
+  }
+  :root.light footer .text-gray-500 {
+    color: #9ca3af !important;
   }
 }
 
 @layer utilities {
   .glass-panel {
-    @apply bg-surfaceLight/80 backdrop-blur-md border border-white/5;
+    @apply bg-surfaceLight/80 backdrop-blur-md;
+    border: 1px solid var(--color-border);
   }
 }

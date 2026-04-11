@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { getUserProfile } from '../services/user_service';
 
@@ -20,8 +21,9 @@ const Settings = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  const { isDarkMode, toggleTheme } = useTheme();
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to true based on app aesthetics
   const [isVerified, setIsVerified] = useState(false);
 
   // Password Modal State
@@ -151,7 +153,7 @@ const Settings = () => {
               type="checkbox" 
               className="sr-only peer" 
               checked={isDarkMode}
-              onChange={() => setIsDarkMode(!isDarkMode)}
+              onChange={toggleTheme}
             />
             <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#667eea]"></div>
           </label>

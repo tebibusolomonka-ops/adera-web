@@ -121,12 +121,12 @@ const Profile = () => {
   const renderMenuItem = (item: any, isLast: boolean) => {
     const IconComp = (LucideIcons as any)[item.icon] || LucideIcons.HelpCircle;
     return (
-      <div key={item.id} onClick={item.action} className={`flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors ${!isLast ? 'border-b border-white/5' : ''}`}>
+    <div key={item.id} onClick={item.action} className={`flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors ${!isLast ? 'border-b border-white/5' : ''}`}>
         <div className="flex items-center">
-          <div className="w-9 h-9 rounded-lg bg-[#2D3748] flex items-center justify-center mr-4" style={{ backgroundColor: item.color ? '#422020' : '#2D3748' }}>
-            <IconComp className="w-5 h-5 text-white" style={{ color: item.color || '#b18cff' }} />
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center mr-4" style={{ backgroundColor: item.color ? '#422020' : 'var(--color-surfaceLight)' }}>
+            <IconComp className="w-5 h-5" style={{ color: item.color || '#b18cff' }} />
           </div>
-          <span className="font-semibold" style={{ color: item.color || 'white' }}>{item.title}</span>
+          <span className="font-semibold" style={{ color: item.color || 'var(--color-textPrimary)' }}>{item.title}</span>
         </div>
         <ChevronRight className="w-5 h-5 text-gray-500" />
       </div>
@@ -161,11 +161,19 @@ const Profile = () => {
               ref={fileInputRef}
               onChange={handleProfileImageChange}
             />
-            <img 
-              src={profileData?.photoURL || user?.photoURL || 'https://via.placeholder.com/150'} 
-              alt="Avatar" 
-              className="w-24 h-24 rounded-full border-4 border-surface shadow-lg object-cover" 
-            />
+            {(profileData?.photoURL || user?.photoURL) ? (
+              <img 
+                src={profileData?.photoURL || user?.photoURL} 
+                alt="Avatar" 
+                className="w-24 h-24 rounded-full border-4 border-surface shadow-lg object-cover" 
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full border-4 border-surface shadow-lg bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center">
+                <span className="text-white text-3xl font-bold">
+                  {(profileData?.displayName || user?.displayName || 'U').charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
             <div 
               onClick={() => fileInputRef.current?.click()}
               className="absolute bottom-0 right-0 w-8 h-8 bg-[#2D3748] border-2 border-surface rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:bg-white/10 transition-colors"

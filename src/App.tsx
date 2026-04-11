@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 
@@ -49,9 +50,6 @@ const PrivateWrapper = () => {
   
   if (!user) return <Navigate to="/login" replace />;
   
-  // Block unverified email users
-  if (!user.emailVerified) return <Navigate to="/verify-email" replace />;
-  
   return <Layout />;
 };
 
@@ -64,9 +62,10 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
@@ -112,6 +111,7 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

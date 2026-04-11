@@ -20,9 +20,11 @@ export default {
           900: '#6441ad',
           950: '#432a7e',
         },
-        background: '#0F0F1A',
-        surface: '#1A1A2E',
-        surfaceLight: '#252542'
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        surfaceLight: 'var(--color-surfaceLight)',
+        textPrimary: 'var(--color-textPrimary)',
+        textSecondary: 'var(--color-textSecondary)',
       }
     },
   },
