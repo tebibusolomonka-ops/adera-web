@@ -163,7 +163,7 @@ const Profile = () => {
             />
             {(profileData?.photoURL || user?.photoURL) ? (
               <img 
-                src={profileData?.photoURL || user?.photoURL} 
+                src={profileData?.photoURL || user?.photoURL || 'https://via.placeholder.com/150'} 
                 alt="Avatar" 
                 className="w-24 h-24 rounded-full border-4 border-surface shadow-lg object-cover" 
               />
