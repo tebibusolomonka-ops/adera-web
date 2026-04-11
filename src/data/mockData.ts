@@ -61,7 +61,7 @@ export const RECENT_ITEMS = [
     id: '5',
     title: 'Telegram Channel 2k',
     category: 'social',
-    image_url: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    image_url: '/images/telegram.png',
     level: 0,
     follower_count: '2k',
     price: 500,
