@@ -14,16 +14,32 @@ const Sell = () => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
     if (user) {
       getUserProfile(user.uid).then(profile => {
         if (!profile?.isVerified) {
           navigate('/verification-required', { replace: true });
+        } else {
+          setIsCheckingAuth(false);
         }
-      }).catch(console.error);
+      }).catch(err => {
+        console.error(err);
+        setIsCheckingAuth(false);
+      });
+    } else {
+      setIsCheckingAuth(false);
     }
   }, [user, navigate]);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background items-center justify-center">
+         <div className="w-8 h-8 border-4 border-[#764ba2] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   // Social Media State
   const [socialPlatform, setSocialPlatform] = useState('');
