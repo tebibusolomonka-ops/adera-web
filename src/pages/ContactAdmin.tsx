@@ -54,54 +54,6 @@ const ContactAdmin = () => {
     }).catch(() => setIsVerified(false));
   }, [user]);
 
-  // If not verified, show gate screen
-  if (isVerified === false) {
-    return (
-      <div className="flex flex-col min-h-screen h-screen bg-background">
-        <div className="flex items-center px-4 py-4 border-b border-white/10 bg-surface z-10 shrink-0 shadow-sm">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition">
-            <ChevronLeft className="w-7 h-7 text-white" />
-          </button>
-          <div className="flex flex-col flex-1 mx-2">
-              <h1 className="text-lg font-bold text-white leading-tight">Contact Admin</h1>
-          </div>
-        </div>
-        <div className="flex-1 flex items-center justify-center px-6">
-          <div className="w-full max-w-sm text-center">
-            <div className="w-20 h-20 rounded-full bg-[#E53E3E]/15 flex items-center justify-center mx-auto mb-5">
-              <ShieldAlert className="w-10 h-10 text-[#E53E3E]" />
-            </div>
-            <h2 className="text-[22px] font-bold text-white mb-2">Verification Required</h2>
-            <p className="text-[14px] text-gray-400 mb-8 leading-relaxed">
-              You need to be a verified user to access customer support. Please verify your identity first.
-            </p>
-            <button
-              onClick={() => navigate('/verify')}
-              className="w-full py-3.5 bg-[#667eea] text-white rounded-xl font-bold text-[15px] hover:bg-[#5a6ee0] transition shadow-lg shadow-[#667eea]/20 mb-3"
-            >
-              Verify Now
-            </button>
-            <button
-              onClick={() => navigate(-1)}
-              className="text-gray-400 hover:text-white text-[14px] font-medium transition"
-            >
-              ← Go Back
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Still loading verification status
-  if (isVerified === null) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-8 h-8 text-[#667eea] animate-spin" />
-      </div>
-    );
-  }
-
   // 24h Countdown Timer
   useEffect(() => {
     if (!closedAt) return;
@@ -128,7 +80,7 @@ const ContactAdmin = () => {
   }, [closedAt]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isVerified !== true) return;
 
     let cleanupFns: (() => void)[] = [];
 
@@ -242,7 +194,55 @@ const ContactAdmin = () => {
     return () => {
         cleanupFns.forEach(fn => fn());
     };
-  }, [user]);
+  }, [user, isVerified]);
+
+  // If not verified, show gate screen
+  if (isVerified === false) {
+    return (
+      <div className="flex flex-col min-h-screen h-screen bg-background">
+        <div className="flex items-center px-4 py-4 border-b border-white/10 bg-surface z-10 shrink-0 shadow-sm">
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition">
+            <ChevronLeft className="w-7 h-7 text-white" />
+          </button>
+          <div className="flex flex-col flex-1 mx-2">
+              <h1 className="text-lg font-bold text-white leading-tight">Contact Admin</h1>
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-6">
+          <div className="w-full max-w-sm text-center">
+            <div className="w-20 h-20 rounded-full bg-[#E53E3E]/15 flex items-center justify-center mx-auto mb-5">
+              <ShieldAlert className="w-10 h-10 text-[#E53E3E]" />
+            </div>
+            <h2 className="text-[22px] font-bold text-white mb-2">Verification Required</h2>
+            <p className="text-[14px] text-gray-400 mb-8 leading-relaxed">
+              You need to be a verified user to access customer support. Please verify your identity first.
+            </p>
+            <button
+              onClick={() => navigate('/verify')}
+              className="w-full py-3.5 bg-[#667eea] text-white rounded-xl font-bold text-[15px] hover:bg-[#5a6ee0] transition shadow-lg shadow-[#667eea]/20 mb-3"
+            >
+              Verify Now
+            </button>
+            <button
+              onClick={() => navigate(-1)}
+              className="text-gray-400 hover:text-white text-[14px] font-medium transition"
+            >
+              ← Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Still loading verification status
+  if (isVerified === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <Loader2 className="w-8 h-8 text-[#667eea] animate-spin" />
+      </div>
+    );
+  }
 
   const handleSend = async () => {
       if ((!inputText.trim() && !selectedImage) || !ticketId || !user || isClosed) return;

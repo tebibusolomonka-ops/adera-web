@@ -71,13 +71,37 @@ const MySales = () => {
   };
 
   const handlePress = (item: any) => {
-    // Navigate based on status exactly like mobile app
     if (item.status === 'completed') {
         navigate('/transaction-completed', { state: { transaction: { ...item, type: 'sale' } } });
         return;
     }
-    // TODO: Add these specific sub-flows later if needed. For now just navigate to detail overview
-    navigate(`/sales/${item.id}`, { state: { item } });
+    if (item.status === 'pending_approval' || item.status === 'pending') {
+        navigate('/payment-verification', { state: { item } });
+        return;
+    }
+    if (item.status === 'approved' || item.status === 'seller_released') {
+        navigate('/release-credentials', { state: { item } });
+        return;
+    }
+    if (item.status === 'released') {
+         navigate('/waiting-for-confirmation', { state: { transactionId: item.id } });
+         return;
+    }
+    if (item.status === 'disputed') {
+        navigate('/seller-dispute', { state: { transaction: item } });
+        return;
+    }
+    if (item.status === 'dispute_rejected') {
+         navigate('/dispute-outcome', { state: { outcome: 'rejected', transaction: item } }); 
+         return;
+    }
+    if (item.status === 'dispute_completed') {
+          navigate('/dispute-solved', { state: { transaction: item } });
+          return;
+    }
+    
+    // Fallback if status doesn't match above (e.g. cancelled)
+    alert(`This sale is currently: ${item.status.replace('_', ' ')}`);
   };
 
   return (

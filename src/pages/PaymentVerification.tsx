@@ -15,14 +15,13 @@ const PaymentVerification = () => {
     const location = useLocation();
     const { item } = location.state || {};
 
-    // Default/Fallback data
-    const data = item || {
-        id: 'default',
-        title: 'PUBG Mobile Account',
-        price: 294.00,
-        image_url: 'https://via.placeholder.com/150',
-        seller: { name: 'this_is_me', handle: '@this_is_me' },
-    };
+    const data = item || {};
+    
+    // Support both raw frontend objects and Firestore Transaction structures
+    const title = data.listingDetails?.title || data.title || 'Unknown Item';
+    const price = data.amount || data.price || 0;
+    const imageUrl = data.listingDetails?.imageUrl || data.image_url || data.image || 'https://via.placeholder.com/150';
+    const sellerHandle = data.seller?.handle || data.sellerName || data.sellerId || '@seller';
 
     const [lastChecked, setLastChecked] = useState(new Date());
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -91,20 +90,20 @@ const PaymentVerification = () => {
                 {/* Item Information Card (Compact) */}
                 <div className="bg-surface rounded-2xl p-4 mb-5 shadow-sm border border-white/5 flex flex-row items-center">
                     <img 
-                        src={getValidImageUrl(data.image_url)} 
-                        alt={data.title} 
+                        src={getValidImageUrl(imageUrl)} 
+                        alt={title} 
                         className="w-[60px] h-[60px] rounded-xl object-cover bg-surfaceLight" 
                     />
                     <div className="flex-1 ml-3 flex flex-col justify-center">
-                        <h4 className="text-[14px] font-semibold text-white mb-1 leading-tight">{data.title}</h4>
+                        <h4 className="text-[14px] font-semibold text-white mb-1 leading-tight">{title}</h4>
                         <div className="flex items-center mb-1">
                             <span className="text-[12px] text-gray-400">From</span>
                             <div className="flex items-center bg-[#f0fdf4]/10 px-2 py-0.5 rounded-full ml-1.5 border border-[#2ecc71]/20">
                                 <div className="w-3.5 h-3.5 rounded-full bg-gray-600 mr-1.5" />
-                                <span className="text-[#2ecc71] font-medium text-[12px]">{data.seller?.handle || '@seller'}</span>
+                                <span className="text-[#2ecc71] font-medium text-[12px]">{sellerHandle}</span>
                             </div>
                         </div>
-                        <span className="text-[15px] font-bold text-white leading-none">{Number(data.price).toFixed(2)} ETB</span>
+                        <span className="text-[15px] font-bold text-white leading-none">{Number(price).toFixed(2)} ETB</span>
                     </div>
                 </div>
 
