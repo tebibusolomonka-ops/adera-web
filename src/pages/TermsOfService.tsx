@@ -90,7 +90,7 @@ const TermsOfService = () => {
               <li>Off-platform transactions are strictly prohibited and will result in immediate account termination.</li>
               <li>Payment verification is required before account credentials are released to the buyer.</li>
               <li>Sellers receive payment only after the buyer confirms successful receipt of account credentials.</li>
-              <li>The Platform may charge service fees on transactions, which will be clearly disclosed before completion.</li>
+              <li>The Platform charges a mandatory 7% platform fee added to the seller's asking price. This will be explicitly seen upon listing and at checkout.</li>
               <li>All payments are final once a transaction is marked as completed by both parties.</li>
             </ul>
           </section>

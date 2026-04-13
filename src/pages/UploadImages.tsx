@@ -93,7 +93,9 @@ const UploadImages = () => {
         additionalImages: imageUrls, 
         sellerId: user.uid,
         status: 'pending',
-        price: isNaN(priceValue) ? 0 : priceValue,
+        price: isNaN(priceValue) ? 0 : priceValue * 1.07,
+        basePrice: isNaN(priceValue) ? 0 : priceValue,
+        platformFee: isNaN(priceValue) ? 0 : priceValue * 0.07,
         
         socialPlatform: listingData.socialPlatform || null,
         socialUsername: listingData.socialUsername || null,

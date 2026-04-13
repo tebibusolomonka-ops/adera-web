@@ -206,8 +206,13 @@ const Sell = () => {
                   <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe the account, audience, niche..." rows={4} className="w-full bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#764ba2] transition-colors resize-none" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Price ($)</label>
+                  <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Price (ETB)</label>
                   <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g. 500" className="w-full bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#764ba2] transition-colors" required />
+                  {price && !isNaN(Number(price)) && (
+                    <p className="text-[#2ecc71] text-xs mt-1 font-medium italic">
+                      Your item will be listed for {(Number(price) * 1.07).toFixed(2)} ETB (includes 7% platform fee).
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -255,8 +260,13 @@ const Sell = () => {
                   <textarea value={gameDescription} onChange={e => setGameDescription(e.target.value)} placeholder="List skins, rare items, battle pass stats..." rows={4} className="w-full bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#764ba2] transition-colors resize-none" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Price ($)</label>
+                  <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Price (ETB)</label>
                   <input type="number" value={gamePrice} onChange={e => setGamePrice(e.target.value)} placeholder="e.g. 500" className="w-full bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#764ba2] transition-colors" required />
+                  {gamePrice && !isNaN(Number(gamePrice)) && (
+                    <p className="text-[#2ecc71] text-xs mt-1 font-medium italic">
+                      Your item will be listed for {(Number(gamePrice) * 1.07).toFixed(2)} ETB (includes 7% platform fee).
+                    </p>
+                  )}
                 </div>
               </div>
             )}

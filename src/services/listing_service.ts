@@ -7,6 +7,8 @@ export interface Listing {
   title: string;
   description?: string;
   price: number;
+  basePrice?: number;
+  platformFee?: number;
   image_url: string;
   category: string;
   sellerId: string;

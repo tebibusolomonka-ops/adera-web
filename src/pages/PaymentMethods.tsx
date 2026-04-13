@@ -108,7 +108,7 @@ const PaymentMethods = () => {
                 data.id,
                 user.uid,
                 data.sellerId || 'unknown_seller',
-                Number(data.price),
+                Number(data.price) * 0.93, // Store Net Payout (Listing Price - 7%)
                 {
                     title: data.title,
                     imageUrl: data.image_url || data.imageUri || '',

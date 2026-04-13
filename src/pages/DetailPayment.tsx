@@ -23,9 +23,10 @@ const DetailPayment = () => {
     status: 'active'
   };
 
-  const price = Number(data.price) || 0;
-  const serviceFee = price * 0.05;
-  const totalPrice = price + serviceFee;
+  // Legacy support fallback logic:
+  const basePrice = data.basePrice !== undefined ? Number(data.basePrice) : Number(data.price || 0);
+  const totalPrice = data.basePrice !== undefined ? Number(data.price || 0) : basePrice * 1.07;
+  const serviceFee = data.platformFee !== undefined ? Number(data.platformFee) : basePrice * 0.07;
 
   const steps = [
     { number: 1, title: 'Buyer Initiates Transaction.', desc: 'You started the process and the seller was notified.', active: true },
@@ -76,7 +77,7 @@ const DetailPayment = () => {
                  <span className="text-[12px] text-gray-400 mb-1.5">
                     From <span className="text-[#2ecc71] font-medium">{data.seller?.handle || '@seller'}</span>
                  </span>
-                 <span className="text-[16px] font-bold text-white leading-none">{price.toFixed(2)} birr</span>
+                 <span className="text-[16px] font-bold text-white leading-none">{totalPrice.toFixed(2)} birr</span>
               </div>
            </div>
         </div>
@@ -102,10 +103,14 @@ const DetailPayment = () => {
         {/* Price Summary */}
         <div className="px-2 mb-8">
            <div className="flex flex-row justify-between items-center mb-3">
-              <span className="text-[14px] text-gray-400">Service fee (5%)</span>
+              <span className="text-[14px] text-gray-400">Original Item Price</span>
+              <span className="text-[14px] font-medium text-white">{basePrice.toFixed(2)} birr</span>
+           </div>
+           <div className="flex flex-row justify-between items-center mb-3">
+              <span className="text-[14px] text-gray-400">Platform fee (7%)</span>
               <span className="text-[14px] font-medium text-white">{serviceFee.toFixed(2)} birr</span>
            </div>
-           <div className="flex flex-row justify-between items-center mt-4">
+           <div className="flex flex-row justify-between items-center mt-4 pt-3 border-t border-white/10">
               <span className="text-[16px] font-bold text-white">Total price</span>
               <span className="text-[18px] font-bold text-[#667eea]">{totalPrice.toFixed(2)} birr</span>
            </div>

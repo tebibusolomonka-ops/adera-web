@@ -174,7 +174,8 @@ export const lockListingForPayment = async (
     buyerId: string, 
     sellerId: string, 
     amount: number, 
-    listingDetails: { title: string, imageUrl: string }
+    listingDetails: { title: string, imageUrl: string },
+    sellerPayout?: number
 ): Promise<string> => {
     try {
         const listingRef = doc(db, 'listings', listingId);
@@ -208,6 +209,7 @@ export const lockListingForPayment = async (
                 amount,
                 status: 'pending',
                 listingDetails,
+                sellerPayout: sellerPayout || amount,
                 createdAt: serverTimestamp(),
             });
         });
