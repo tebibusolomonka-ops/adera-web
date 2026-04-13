@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { User } from 'firebase/auth';
 import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { app } from '../firebase';
+import { getUserProfile } from '../services/user_service';
 
 interface AuthContextData {
   user: User | null;
@@ -19,7 +20,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const auth = getAuth(app);
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
+      if (user) {
+        try {
+          const profile = await getUserProfile(user.uid);
+          if (profile?.isBanned) {
+            await firebaseSignOut(auth);
+            alert("This account has been permanently banned.");
+            setUser(null);
+            setLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.error("Error checking ban status", error);
+        }
+      }
       setUser(user);
       setLoading(false);
     });

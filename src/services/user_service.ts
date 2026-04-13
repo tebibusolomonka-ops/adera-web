@@ -10,6 +10,7 @@ export interface UserProfile {
   followers: number;
   following: number;
   isVerified: boolean;
+  isBanned?: boolean;
   verificationStatus?: 'initial' | 'pending' | 'approved' | 'rejected';
   firstName?: string;
   lastName?: string;
