@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, doc, updateDoc, query, where, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, doc, updateDoc, query, where, onSnapshot, serverTimestamp, getDoc } from 'firebase/firestore';
 import { app } from '../firebase';
 
 export interface Notification {
@@ -33,6 +33,32 @@ export const createNotification = async (
       read: false,
       createdAt: serverTimestamp(),
     });
+
+    // --- TELEGRAM BOT FORWARDING ---
+    try {
+       const userSnap = await getDoc(doc(db, 'users', userId));
+       if (userSnap.exists()) {
+           const userData = userSnap.data();
+           if (userData.telegramChatId) {
+               const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+               if (botToken) {
+                   const telegramMessage = `🔔 *${title}*\n\n${message}`;
+                   fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                       method: 'POST',
+                       headers: { 'Content-Type': 'application/json' },
+                       body: JSON.stringify({
+                           chat_id: userData.telegramChatId,
+                           text: telegramMessage,
+                           parse_mode: 'Markdown'
+                       })
+                   }).catch(e => console.error("Telegram API Error:", e)); // Silent fail if network issue
+               }
+           }
+       }
+    } catch (e) {
+        console.error("Error looking up telegram ID:", e);
+    }
+
   } catch (error) {
     console.error('Error creating notification:', error);
   }

@@ -30,22 +30,26 @@ export const addReview = async (review: Omit<Review, 'createdAt'>) => {
     // 2. Update Seller's Average Rating
     const sellerRef = doc(db, USERS_COLLECTION, review.sellerId);
     
-    await runTransaction(db, async (transaction) => {
-      const sellerDoc = await transaction.get(sellerRef);
-      if (!sellerDoc.exists()) return;
+    try {
+      await runTransaction(db, async (transaction) => {
+        const sellerDoc = await transaction.get(sellerRef);
+        if (!sellerDoc.exists()) return;
 
-      const data = sellerDoc.data();
-      const currentRating = data?.rating || 0;
-      const currentCount = data?.ratingCount || 0;
+        const data = sellerDoc.data();
+        const currentRating = data?.rating || 0;
+        const currentCount = data?.ratingCount || 0;
 
-      const newCount = currentCount + 1;
-      const newRating = ((currentRating * currentCount) + review.rating) / newCount;
+        const newCount = currentCount + 1;
+        const newRating = ((currentRating * currentCount) + review.rating) / newCount;
 
-      transaction.update(sellerRef, {
-        rating: newRating,
-        ratingCount: newCount
+        transaction.update(sellerRef, {
+          rating: newRating,
+          ratingCount: newCount
+        });
       });
-    });
+    } catch (txError) {
+      console.warn("Non-fatal error updating seller rating:", txError);
+    }
 
     return true;
   } catch (error) {

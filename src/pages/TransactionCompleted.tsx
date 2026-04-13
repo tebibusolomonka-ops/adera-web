@@ -4,6 +4,8 @@ import { CheckCircle2, Star, Loader2, Home } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../services/user_service';
 import { addReview } from '../services/ReviewService';
+import { db } from '../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const getValidImageUrl = (url?: string) => {
     if (!url || url.startsWith('file://')) {
@@ -26,6 +28,7 @@ const TransactionCompleted = () => {
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     useEffect(() => {
         if (transaction) {
@@ -37,13 +40,19 @@ const TransactionCompleted = () => {
             };
             fetchSeller();
 
+            // Prevent self-reviews and multiple reviews
+            const sellerId = transaction.sellerId || transaction.seller_id;
+            if (transaction.hasReviewed || (user && user.uid === sellerId)) {
+                return;
+            }
+
             // Automatically open review modal after a short delay
             const timer = setTimeout(() => {
                 setReviewModalVisible(true);
             }, 1000);
             return () => clearTimeout(timer);
         }
-    }, [transaction]);
+    }, [transaction, user]);
 
     if (!transaction) {
         return (
@@ -70,19 +79,34 @@ const TransactionCompleted = () => {
         try {
             const buyerProfile = await getUserProfile(user.uid);
             
-            await addReview({
+            const payload: any = {
                 buyerId: user.uid,
                 buyerName: buyerProfile?.displayName || user.displayName || 'Buyer',
-                buyerPhotoURL: buyerProfile?.photoURL || user.photoURL || undefined,
-                sellerId: transaction.sellerId || transaction.seller_id,
+                sellerId: transaction.sellerId || transaction.seller_id || '',
                 listingId: transaction.listingId || transaction.listing_id || 'unknown',
                 rating,
                 comment,
-            } as any);
+            };
             
+            if (buyerProfile?.photoURL || user.photoURL) {
+                payload.buyerPhotoURL = buyerProfile?.photoURL || user.photoURL;
+            }
+
+            await addReview(payload);
+            
+            // Mark transaction as reviewed so it doesn't prompt again
+            if (transaction.id) {
+                await updateDoc(doc(db, 'transactions', transaction.id), { hasReviewed: true });
+                // Also update local state
+                transaction.hasReviewed = true; 
+            }
+
             setIsSubmitting(false);
             setReviewModalVisible(false);
-            alert("Review submitted successfully!");
+            
+            // Show custom toast instead of alert
+            setToastMessage("Review submitted successfully!");
+            setTimeout(() => setToastMessage(''), 3000);
         } catch (error) {
             console.error(error);
             setIsSubmitting(false);
@@ -116,7 +140,7 @@ const TransactionCompleted = () => {
                         <div className="flex-1 overflow-hidden">
                             <h4 className="text-[18px] font-bold text-white mb-1 truncate">{listing.title || 'Unknown Item'}</h4>
                             <span className="text-[16px] font-semibold text-[#38A169]">
-                                {parseFloat(listing.price || transaction.price || 0).toFixed(2)} ETB
+                                {parseFloat(transaction.amount || transaction.price || listing.price || 0).toFixed(2)} ETB
                             </span>
                         </div>
                     </div>
@@ -207,6 +231,14 @@ const TransactionCompleted = () => {
                             </button>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Success Toast */}
+            {toastMessage && (
+                <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[60] bg-[#38A169] text-white px-6 py-3 rounded-full shadow-xl flex items-center font-semibold animate-bounce">
+                    <CheckCircle2 className="w-5 h-5 mr-2" />
+                    {toastMessage}
                 </div>
             )}
         </div>

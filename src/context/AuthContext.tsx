@@ -2,8 +2,10 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { User } from 'firebase/auth';
 import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 import { app } from '../firebase';
 import { getUserProfile } from '../services/user_service';
+import { getTelegramUser } from '../services/telegram';
 
 interface AuthContextData {
   user: User | null;
@@ -31,6 +33,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setLoading(false);
             return;
           }
+          
+          // Capture Telegram ID if in Mini App
+          const tgUser = getTelegramUser();
+          if (tgUser && tgUser.id) {
+            if (profile?.telegramChatId !== tgUser.id) {
+               const db = getFirestore(app);
+               await updateDoc(doc(db, 'users', user.uid), {
+                  telegramChatId: tgUser.id
+               });
+            }
+          }
+
         } catch (error) {
           console.error("Error checking ban status", error);
         }
