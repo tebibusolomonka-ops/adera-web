@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { RefreshCcw, Receipt, ChevronRight, Loader2 } from 'lucide-react';
+import { RefreshCcw, Receipt, ChevronRight, Loader2, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase';
@@ -246,7 +246,12 @@ const Transaction = () => {
             
             {/* Header */}
             <div className="flex items-center justify-between px-5 pt-6 pb-4 border-b border-white/5 bg-surface">
-                <h1 className="text-[20px] font-bold text-white">My Transactions</h1>
+                <div className="flex items-center">
+                    <button onClick={() => navigate(-1)} className="p-1 -ml-1 mr-2 hover:bg-white/10 rounded-full transition">
+                        <ArrowLeft className="w-6 h-6 text-white" />
+                    </button>
+                    <h1 className="text-[20px] font-bold text-white">My Transactions</h1>
+                </div>
                 <button onClick={onRefresh} className={`p-2 bg-surfaceLight rounded-full hover:bg-white/10 transition ${refreshing ? 'opacity-50' : ''}`}>
                     <RefreshCcw className={`w-5 h-5 text-primary-500 ${refreshing ? 'animate-spin' : ''}`} />
                 </button>

@@ -145,6 +145,11 @@ const Profile = () => {
     <div className="flex flex-col min-h-screen bg-background pb-20 md:pb-8">
       {/* Tall Header Gradient */}
       <div className="relative h-64 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-b-[40px] overflow-hidden">
+        <div className="absolute top-6 left-4 z-10">
+          <button onClick={() => navigate(-1)} className="p-2 hover:bg-white/20 rounded-full transition">
+            <LucideIcons.ArrowLeft className="w-6 h-6 text-white" />
+          </button>
+        </div>
         <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-white/10 blur-xl"></div>
         <div className="absolute -bottom-8 -right-8 w-40 h-40 rounded-full bg-white/10 blur-xl"></div>
       </div>

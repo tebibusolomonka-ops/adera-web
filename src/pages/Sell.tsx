@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronLeft, Package } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getUserProfile } from '../services/user_service';
 
 const SOCIAL_PLATFORMS = ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'X (Twitter)', 'LinkedIn', 'Snapchat', 'Discord', 'Reddit', 'Pinterest', 'WhatsApp', 'Telegram', 'Other'];
 const GAMES_LIST = ['PUBG Mobile', 'Free Fire', 'Call of Duty Mobile', 'Call of Duty Warzone', 'League of Legends', 'Valorant', 'Fortnite', 'Apex Legends', 'Mobile Legends', 'Other'];
@@ -13,6 +14,16 @@ const Sell = () => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      getUserProfile(user.uid).then(profile => {
+        if (!profile?.isVerified) {
+          navigate('/verification-required', { replace: true });
+        }
+      }).catch(console.error);
+    }
+  }, [user, navigate]);
 
   // Social Media State
   const [socialPlatform, setSocialPlatform] = useState('');
