@@ -25,6 +25,7 @@ export interface UserProfile {
   finNumber?: string;
   rating?: number;
   ratingCount?: number;
+  telegramChatId?: number;
 }
 
 const USERS_COLLECTION = 'users';
