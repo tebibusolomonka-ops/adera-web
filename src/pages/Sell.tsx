@@ -33,14 +33,6 @@ const Sell = () => {
     }
   }, [user, navigate]);
 
-  if (isCheckingAuth) {
-    return (
-      <div className="flex flex-col min-h-screen bg-background items-center justify-center">
-         <div className="w-8 h-8 border-4 border-[#764ba2] border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
   // Social Media State
   const [socialPlatform, setSocialPlatform] = useState('');
   const [socialUsername, setSocialUsername] = useState('');
@@ -102,6 +94,14 @@ const Sell = () => {
         setLoading(false);
     }
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background items-center justify-center">
+         <div className="w-8 h-8 border-4 border-[#764ba2] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-20 md:pb-8">
