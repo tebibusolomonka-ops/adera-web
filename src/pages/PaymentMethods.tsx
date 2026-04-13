@@ -33,9 +33,10 @@ const PaymentMethods = () => {
     };
 
     const paymentMethods = [
-        { label: 'Telebirr', account: '0912345678', name: 'Abebe Kebede' },
-        { label: 'CBE', account: '1000123456789', name: 'Abebe Kebede' },
-        { label: 'Awash', account: '01320123456789', name: 'Abebe Kebede' },
+        { label: 'CBE', account: '1000654958991', name: 'Tebibu Solomon' },
+        { label: 'Awash', account: '01320814516500', name: 'Tebibu Solomon' },
+        { label: 'Telebirr', account: '0902888810', name: 'Mintamir Tsegaye' },
+        { label: 'Mpesa', account: '0704808810', name: 'Tebibu' },
     ];
 
     const handleCopy = (text: string, label: string) => {
@@ -169,15 +170,16 @@ const PaymentMethods = () => {
                     
                     {paymentMethods.map((method, index) => {
                         const isTelebirr = method.label === 'Telebirr';
+                        const isMpesa = method.label === 'Mpesa';
                         const isCBE = method.label === 'CBE';
                         
                         return (
                             <div key={index} className="bg-background rounded-2xl border border-white/10 p-4 mb-4 shadow-sm">
                                 <div className="flex flex-row items-center mb-3">
                                     <div className={`w-9 h-9 rounded-full flex items-center justify-center mr-3
-                                        ${isTelebirr ? 'bg-[#2C5282]' : isCBE ? 'bg-[#6B46C1]' : 'bg-[#276749]'}
+                                        ${isTelebirr ? 'bg-[#2C5282]' : isMpesa ? 'bg-[#4CAF50]' : isCBE ? 'bg-[#6B46C1]' : 'bg-[#276749]'}
                                     `}>
-                                        {isTelebirr ? (
+                                        {(isTelebirr || isMpesa) ? (
                                             <Smartphone className="w-5 h-5 text-white" />
                                         ) : (
                                             <Building2 className="w-5 h-5 text-white" />
