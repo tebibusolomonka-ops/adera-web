@@ -40,19 +40,18 @@ export const createNotification = async (
        if (userSnap.exists()) {
            const userData = userSnap.data();
            if (userData.telegramChatId) {
-               const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-               if (botToken) {
-                   const telegramMessage = `🔔 *${title}*\n\n${message}`;
-                   fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                       method: 'POST',
-                       headers: { 'Content-Type': 'application/json' },
-                       body: JSON.stringify({
-                           chat_id: userData.telegramChatId,
-                           text: telegramMessage,
-                           parse_mode: 'Markdown'
-                       })
-                   }).catch(e => console.error("Telegram API Error:", e)); // Silent fail if network issue
-               }
+               const telegramMessage = `🔔 *${title}*\n\n${message}`;
+               
+               // SECURE VERCEL BACKEND ROUTE 
+               // The frontend never touches the Token. It just asks our Vercel Server to do it.
+               fetch(`/api/telegram`, {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({
+                       chat_id: userData.telegramChatId,
+                       text: telegramMessage
+                   })
+               }).catch(e => console.error("Secure API Error:", e)); // Silent fail if network issue
            }
        }
     } catch (e) {
