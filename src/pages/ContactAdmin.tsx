@@ -249,16 +249,22 @@ const ContactAdmin = () => {
 
       setSending(true);
       const text = inputText.trim();
-      const imageToSend = selectedImage;
+      
+      const originalImage = selectedImage;
       
       setInputText('');
       setSelectedImage(null);
 
       try {
+          let uploadedImageUrl = null;
+          if (originalImage) {
+              uploadedImageUrl = await uploadToCloudinary(originalImage);
+          }
+
           const messagesRef = collection(db, 'support_tickets', ticketId, 'messages');
           await addDoc(messagesRef, {
               body: text,
-              image: imageToSend,
+              image: uploadedImageUrl,
               sender_type: 'user',
               created_at: serverTimestamp(),
           });

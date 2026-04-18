@@ -70,8 +70,14 @@ const UploadImages = () => {
     try {
       if (!user) throw new Error("Not logged in");
 
+      // 1. Upload images to Cloudinary
       const validImages = images.filter((img: ImageItem | null): img is ImageItem => img !== null);
-      const imageUrls = validImages.map(img => img.dataUri);
+      
+      const imageUrls: string[] = [];
+      for(const image of validImages) {
+          const remoteUrl = await uploadToCloudinary(image.dataUri);
+          imageUrls.push(remoteUrl);
+      }
 
       const priceValue = parseFloat(listingData.price);
       const categoryStr = listingData.category === 'social_media' 
