@@ -22,15 +22,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const auth = getAuth(app);
-    const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
-      if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser: User | null) => {
+      // *** THE FIX: Update State Immediately ***
+      // We set the user and stop loading as soon as Firebase confirms the session.
+      // This ensures Login.tsx detects the user instantly, fixing the "double click" bug.
+      setUser(authenticatedUser);
+      setLoading(false);
+
+      if (authenticatedUser) {
         try {
-          const profile = await getUserProfile(user.uid);
+          // Perform background checks (Ban status, Telegram ID sync)
+          const profile = await getUserProfile(authenticatedUser.uid);
+          
           if (profile?.isBanned) {
             await firebaseSignOut(auth);
             alert("This account has been permanently banned.");
             setUser(null);
-            setLoading(false);
             return;
           }
           
@@ -39,18 +46,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           if (tgUser && tgUser.id) {
             if (profile?.telegramChatId !== tgUser.id) {
                const db = getFirestore(app);
-               await updateDoc(doc(db, 'users', user.uid), {
+               await updateDoc(doc(db, 'users', authenticatedUser.uid), {
                   telegramChatId: tgUser.id
                });
             }
           }
-
         } catch (error) {
-          console.error("Error checking ban status", error);
+          console.error("Error in background auth logic:", error);
         }
       }
-      setUser(user);
-      setLoading(false);
     });
     return unsubscribe;
   }, []);
