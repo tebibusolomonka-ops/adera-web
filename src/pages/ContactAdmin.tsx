@@ -52,9 +52,10 @@ const ContactAdmin = () => {
   // Check verification status
   useEffect(() => {
     if (!user) return;
-    getUserProfile(user.uid).then(profile => {
-      setIsVerified(profile?.isVerified || profile?.verificationStatus === 'approved' || false);
-    }).catch(() => setIsVerified(false));
+    getUserProfile(user.uid).then(profile =>
+      // STRICT: Only admin-approved verification grants access to support
+      setIsVerified(profile?.verificationStatus === 'approved')
+    ).catch(() => setIsVerified(false));
   }, [user]);
 
   // 24h Countdown Timer

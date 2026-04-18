@@ -71,7 +71,8 @@ const Profile = () => {
     }
   };
 
-  const isUserVerified = profileData?.isVerified === true || profileData?.verificationStatus === 'approved';
+  // STRICT: Only admin-approved users (verificationStatus === 'approved') get access
+  const isUserVerified = profileData?.verificationStatus === 'approved';
 
   const MENU_ITEMS = [
     {
@@ -95,7 +96,7 @@ const Profile = () => {
           icon: 'ShoppingCart', 
           action: () => navigate('/my-purchases')
         },
-        ...(!isUserVerified ? [{ id: '3', title: 'Verify', icon: 'CheckCircle', action: () => navigate('/verify') }] : []),
+        { id: '3', title: 'Verify', icon: 'CheckCircle', action: () => navigate('/verify') },
       ],
     },
     {

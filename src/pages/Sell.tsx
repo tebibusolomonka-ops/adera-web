@@ -19,7 +19,8 @@ const Sell = () => {
   useEffect(() => {
     if (user) {
       getUserProfile(user.uid).then(profile => {
-        if (profile?.isVerified !== true && profile?.verificationStatus !== 'approved') {
+        // STRICT: Only admin-approved verification grants access
+        if (profile?.verificationStatus !== 'approved') {
           navigate('/verification-required', { replace: true });
         } else {
           setIsCheckingAuth(false);
