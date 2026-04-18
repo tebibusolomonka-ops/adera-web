@@ -4,6 +4,8 @@ import { ChevronLeft, Camera, Plus, Loader2 } from 'lucide-react';
 import { createListing } from '../services/listing_service';
 import type { Listing } from '../services/listing_service';
 import { useAuth } from '../context/AuthContext';
+import { uploadToCloudinary } from '../services/cloudinary';
+import { useToast } from '../context/ToastContext';
 
 type ImageItem = {
   dataUri: string;
@@ -13,12 +15,13 @@ const UploadImages = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { showToast } = useToast();
   
   const listingData = location.state?.listingData;
 
   const [images, setImages] = useState<(ImageItem | null)[]>([null, null, null]);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState('');
+  // Removed local error state
 
   const fileInputRefs = [
     useRef<HTMLInputElement>(null),
@@ -45,10 +48,10 @@ const UploadImages = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) { // Increased to 10MB for Cloudinary
-          setError("Image too large. Please select an image under 10MB.");
+          showToast("Image too large. Please select an image under 10MB.", "error");
           return;
       }
-      setError('');
+      // setError(''); removed
       const reader = new FileReader();
       reader.onloadend = () => {
         const newImages = [...images];
@@ -61,10 +64,10 @@ const UploadImages = () => {
 
   const handlePublish = async () => {
     if (!images[0]) {
-      setError('Main image is required');
+      showToast('Main image is required', 'error');
       return;
     }
-    setError('');
+    // setError(''); removed
     setUploading(true);
 
     try {
@@ -119,12 +122,13 @@ const UploadImages = () => {
       const newListing = sanitize(newListingRaw);
 
       await createListing(newListing);
+      showToast("Listing Published Successfully!", "success");
       
       // Navigate to Home like mobile
       navigate('/');
     } catch (err: any) {
       console.error("Publish Error:", err);
-      setError(err.message || "An unexpected error occurred.");
+      showToast(err.message || "An unexpected error occurred.", "error");
     } finally {
       setUploading(false);
     }
@@ -143,11 +147,7 @@ const UploadImages = () => {
       </div>
 
       <div className="p-5 flex-1 overflow-y-auto">
-        {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-500 dark:text-red-400 p-3 rounded-xl mb-4 text-sm font-medium">
-               {error}
-            </div>
-        )}
+        {/* Error div removed */}
 
         <div className="mb-5">
            <h2 className="text-xl font-bold text-[#2D3748] dark:text-white mb-1">Add Visuals</h2>

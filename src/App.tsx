@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Analytics } from "@vercel/analytics/react";
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ToastProvider } from './context/ToastContext';
+import { ToastContainer } from './components/Toast';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 
@@ -49,7 +51,9 @@ const PrivateWrapper = () => {
     return <div className="flex items-center justify-center min-h-screen bg-background"><div className="w-8 h-8 border-4 border-[#764ba2] border-t-transparent rounded-full animate-spin"></div></div>;
   }
   
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
   
   return <Layout />;
 };
@@ -65,54 +69,57 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
-          <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          
-          {/* Main tabs wrapper (Protected) */}
-          <Route path="/" element={<PrivateWrapper />}>
-            <Route index element={<Home />} />
-            <Route path="buy" element={<Buy />} />
-            <Route path="sell" element={<Sell />} />
-            <Route path="upload-images" element={<UploadImages />} />
-            <Route path="my-sales" element={<MySales />} />
-            <Route path="my-purchases" element={<MyPurchases />} />
-            <Route path="verification-required" element={<VerificationRequired />} />
-            <Route path="edit-profile" element={<EditProfile />} />
-            <Route path="edit-profile-verification-required" element={<EditProfileVerificationRequired />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="contact-us" element={<ContactAdmin />} />
-            <Route path="transaction" element={<Transaction />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="seller/:sellerId" element={<SellerProfile />} />
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="listings" element={<ListingList />} />
-            <Route path="item/:id" element={<ItemDetail />} />
-            <Route path="payment" element={<DetailPayment />} />
-            <Route path="payment-methods" element={<PaymentMethods />} />
-            <Route path="payment-verification" element={<PaymentVerification />} />
-            <Route path="view-credentials" element={<ViewCredentials />} />
-            <Route path="release-credentials" element={<ReleaseCredentials />} />
-            <Route path="waiting-for-confirmation" element={<WaitingForConfirmation />} />
-            <Route path="transaction-completed" element={<TransactionCompleted />} />
-            <Route path="dispute-details" element={<DisputeDetails />} />
-            <Route path="seller-dispute" element={<SellerDispute />} />
-            <Route path="dispute-solved" element={<DisputeSolved />} />
-            <Route path="dispute-outcome" element={<DisputeOutcome />} />
-            <Route path="verify" element={<Verification />} />
-            <Route path="privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="terms-of-service" element={<TermsOfService />} />
-          </Route>
+        <ToastProvider>
+          <ToastContainer />
+          <Router>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              
+              {/* Main tabs wrapper (Protected) */}
+              <Route path="/" element={<PrivateWrapper />}>
+                <Route index element={<Home />} />
+                <Route path="buy" element={<Buy />} />
+                <Route path="sell" element={<Sell />} />
+                <Route path="upload-images" element={<UploadImages />} />
+                <Route path="my-sales" element={<MySales />} />
+                <Route path="my-purchases" element={<MyPurchases />} />
+                <Route path="verification-required" element={<VerificationRequired />} />
+                <Route path="edit-profile" element={<EditProfile />} />
+                <Route path="edit-profile-verification-required" element={<EditProfileVerificationRequired />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="contact-us" element={<ContactAdmin />} />
+                <Route path="transaction" element={<Transaction />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="seller/:sellerId" element={<SellerProfile />} />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="listings" element={<ListingList />} />
+                <Route path="item/:id" element={<ItemDetail />} />
+                <Route path="payment" element={<DetailPayment />} />
+                <Route path="payment-methods" element={<PaymentMethods />} />
+                <Route path="payment-verification" element={<PaymentVerification />} />
+                <Route path="view-credentials" element={<ViewCredentials />} />
+                <Route path="release-credentials" element={<ReleaseCredentials />} />
+                <Route path="waiting-for-confirmation" element={<WaitingForConfirmation />} />
+                <Route path="transaction-completed" element={<TransactionCompleted />} />
+                <Route path="dispute-details" element={<DisputeDetails />} />
+                <Route path="seller-dispute" element={<SellerDispute />} />
+                <Route path="dispute-solved" element={<DisputeSolved />} />
+                <Route path="dispute-outcome" element={<DisputeOutcome />} />
+                <Route path="verify" element={<Verification />} />
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="terms-of-service" element={<TermsOfService />} />
+              </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-        <Analytics />
-      </Router>
-    </AuthProvider>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            <Analytics />
+          </Router>
+        </ToastProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

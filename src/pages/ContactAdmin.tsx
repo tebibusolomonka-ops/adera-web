@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, Send, Image as ImageIcon, XCircle, Loader2, Lock, Clock, ShieldAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { getUserProfile } from '../services/user_service';
 import { db } from '../firebase';
 import { 
@@ -27,6 +28,7 @@ interface Message {
 }
 
 const ContactAdmin = () => {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
   
@@ -278,8 +280,8 @@ const ContactAdmin = () => {
           setTimeout(() => {
              messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
           }, 100);
-      } catch (error) {
-          alert('Failed to send message.');
+      } catch (error: any) {
+          showToast(error.message || 'Failed to send message.', 'error');
           console.error(error);
       } finally {
           setSending(false);
@@ -291,7 +293,7 @@ const ContactAdmin = () => {
           const file = e.target.files[0];
           
           if (file.size > 10 * 1024 * 1024) {
-              alert("Image Too Large. Please use an image under 10MB.");
+              showToast("Image Too Large. Please use an image under 10MB.", "error");
               return;
           }
 

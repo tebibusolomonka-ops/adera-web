@@ -3,11 +3,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Send, ShieldCheck, Zap, Lock, CheckCircle2 } from 'lucide-react';
 import { signInWithTelegram } from '../services/auth';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Login = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  // Removed local error state
   const [agreed, setAgreed] = useState(false);
   const navigate = useNavigate();
 
@@ -19,24 +21,24 @@ const Login = () => {
 
   const handleTelegramLogin = async () => {
     if (!agreed) {
-      setError('Please agree to the Terms of Service and Privacy Policy first.');
+      showToast('Please agree to the Terms of Service and Privacy Policy first.', 'error');
       return;
     }
 
-    setError('');
     const tg = (window as any).Telegram?.WebApp;
     
     if (!tg || !tg.initData) {
-      setError('Telegram not detected. Please open Adera inside the Telegram App.');
+      showToast('Telegram not detected. Please open Adera inside the Telegram App.', 'error');
       return;
     }
 
     setLoading(true);
     try {
       await signInWithTelegram(tg.initData);
+      showToast('Welcome to Adera!', 'success');
     } catch (err: any) {
       console.error("Auth Exception:", err);
-      setError(err.message || 'Authentication failed.');
+      showToast(err.message || 'Authentication failed.', 'error');
     } finally {
       setLoading(false);
     }
@@ -86,11 +88,7 @@ const Login = () => {
              {/* Glow effect at top */}
              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
              
-             {error && (
-               <div className="bg-red-500/20 border border-red-500/50 text-red-100 p-4 rounded-2xl mb-8 text-xs font-bold text-center animate-in zoom-in duration-300">
-                 {error}
-               </div>
-             )}
+             {/* Error div removed in favor of Toast */}
 
              <div className="space-y-10">
                 <div className="space-y-4 text-center">
