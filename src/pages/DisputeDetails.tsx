@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Image as ImageIcon, Send, XCircle, X } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, doc, onSnapshot, query, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
+import { uploadToCloudinary } from '../services/cloudinary';
 
 interface Message {
     id: string;
@@ -29,8 +30,7 @@ const DisputeDetails = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [modalImageUri, setModalImageUri] = useState<string | null>(null);
     
-    // Auto-scroll ref
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -43,8 +43,7 @@ const DisputeDetails = () => {
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const allMsgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Message[];
-            
-            // Filter Logic
+            // ... filtering and sorting logic remains the same
             const filteredMsgs = allMsgs.filter(msg => {
                 const isFromAdmin = msg.sender_type === 'admin';
                 if (userRole === 'buyer') {
@@ -58,7 +57,6 @@ const DisputeDetails = () => {
                 }
             });
 
-            // Client-side Sort backup
             filteredMsgs.sort((a, b) => {
                 const getTime = (m: Message) => {
                     const t = m.created_at;
@@ -81,18 +79,25 @@ const DisputeDetails = () => {
     }, [transactionId, userRole]);
 
     const handleSend = async () => {
-        if ((!inputText.trim() && !selectedImage) || !transactionId) return;
+        if ((!inputText.trim() && !selectedImage) || !transactionId || isUploading) return;
 
         const textToSend = inputText.trim();
-        const imageToSend = selectedImage;
+        const imageToUpload = selectedImage;
         
         setInputText('');
         setSelectedImage(null);
+        setIsUploading(true);
 
         try {
+            let imageUrl = null;
+            if (imageToUpload) {
+                // Upload to Cloudinary instead of storing Base64
+                imageUrl = await uploadToCloudinary(imageToUpload, 'dispute_proofs');
+            }
+
             await addDoc(collection(doc(db, 'transactions', transactionId), 'messages'), {
                 body: textToSend,
-                image: imageToSend,
+                image: imageUrl,
                 sender_type: userRole,
                 created_at: serverTimestamp(),
             });
@@ -102,6 +107,8 @@ const DisputeDetails = () => {
         } catch (error) {
             console.error("Error sending message:", error);
             alert("Failed to send message. Please try again.");
+        } finally {
+            setIsUploading(false);
         }
     };
 

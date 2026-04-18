@@ -36,10 +36,54 @@ export default async function handler(req, res) {
         }
 
         const idToken = authHeader.split('Bearer ')[1];
+        let uid;
         try {
-            await admin.auth().verifyIdToken(idToken);
+            const decodedToken = await admin.auth().verifyIdToken(idToken);
+            uid = decodedToken.uid;
         } catch {
             return res.status(401).json({ error: 'Unauthorized: Invalid or expired token' });
+        }
+
+        // 🛡️ STEP 1.5: Rate Limiting (Cloudinary Protection)
+        // Limit each user to 10 signature requests per hour
+        try {
+            const db = admin.firestore();
+            const rateLimitRef = db.collection('rate-limits').doc(uid);
+            const rateLimitDoc = await rateLimitRef.get();
+            const now = Date.now();
+            const windowMs = 60 * 60 * 1000; // 1 hour
+
+            if (!rateLimitDoc.exists) {
+                await rateLimitRef.set({
+                    count: 1,
+                    lastReset: now
+                });
+            } else {
+                const data = rateLimitDoc.data();
+                const timePassed = now - data.lastReset;
+
+                if (timePassed > windowMs) {
+                    // Reset the window
+                    await rateLimitRef.update({
+                        count: 1,
+                        lastReset: now
+                    });
+                } else {
+                    if (data.count >= 10) {
+                        return res.status(429).json({ 
+                            error: 'Too many requests. Please try again after an hour.',
+                            retryAfter: Math.ceil((windowMs - timePassed) / 1000 / 60) // Minutes
+                        });
+                    }
+                    // Increment the count
+                    await rateLimitRef.update({
+                        count: admin.firestore.FieldValue.increment(1)
+                    });
+                }
+            }
+        } catch (e) {
+            console.error('Rate Limit Check Error:', e);
+            // We allow the upload if the rate limiter fails, to avoid blocking legitimate users due to DB issues
         }
 
         // 🔑 STEP 2: Generate Cloudinary signature
