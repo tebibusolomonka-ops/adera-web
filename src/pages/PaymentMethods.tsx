@@ -97,8 +97,8 @@ const PaymentMethods = () => {
         }
         if (!user) {
             alert('You must be logged in to make a purchase.');
-            return;
-        }
+        try {
+            setLoading(true);
 
             const totalPrice = Number(data.price);
             const basePrice = data.basePrice !== undefined ? Number(data.basePrice) : totalPrice / 1.07;
