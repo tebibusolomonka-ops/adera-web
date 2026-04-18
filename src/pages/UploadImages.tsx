@@ -120,10 +120,10 @@ const UploadImages = () => {
       const newListing = sanitize(newListingRaw);
 
       await createListing(newListing);
-      showToast("Listing Published Successfully!", "success");
+      showToast("Listed Successfully! Awaiting admin approval.", "success");
       
-      // Navigate to Home like mobile
-      navigate('/');
+      // Navigate to the waiting room
+      navigate('/listing-pending');
     } catch (err: any) {
       console.error("Publish Error:", err);
       showToast(err.message || "An unexpected error occurred.", "error");

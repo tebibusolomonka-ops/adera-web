@@ -36,6 +36,7 @@ import DisputeDetails from './pages/DisputeDetails';
 import SellerDispute from './pages/SellerDispute';
 import DisputeSolved from './pages/DisputeSolved';
 import DisputeOutcome from './pages/DisputeOutcome';
+import ListingPending from './pages/ListingPending';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -110,6 +111,7 @@ function App() {
                 <Route path="dispute-solved" element={<DisputeSolved />} />
                 <Route path="dispute-outcome" element={<DisputeOutcome />} />
                 <Route path="verify" element={<Verification />} />
+                <Route path="listing-pending" element={<ListingPending />} />
                 <Route path="privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="terms-of-service" element={<TermsOfService />} />
               </Route>
