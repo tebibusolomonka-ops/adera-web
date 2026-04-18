@@ -7,7 +7,8 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword as firebaseUpdatePassword,
-  sendEmailVerification
+  sendEmailVerification,
+  signInWithCustomToken
 } from 'firebase/auth';
 import type { User, UserCredential } from 'firebase/auth';
 import { app } from '../firebase';
@@ -16,6 +17,24 @@ const auth = getAuth(app);
 
 export const signIn = async (email: string, password: string): Promise<UserCredential> => {
   return await signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signInWithTelegram = async (initData: string): Promise<UserCredential> => {
+    // 1. Get Custom Token from Vercel Backend
+    const response = await fetch('https://adera-internal-dash.vercel.app/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ initData })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || 'Telegram authentication failed');
+    }
+
+    // 2. Sign in to Firebase with the Custom Token
+    return await signInWithCustomToken(auth, data.customToken);
 };
 
 export const signUp = async (email: string, password: string): Promise<UserCredential> => {

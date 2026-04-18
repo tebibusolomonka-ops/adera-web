@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { signIn } from '../services/auth';
+import { Mail, Lock, Eye, EyeOff, Send } from 'lucide-react';
+import { signIn, signInWithTelegram } from '../services/auth';
 
 const Login = () => {
   const getErrorMessage = (err: any): string => {
@@ -33,6 +33,27 @@ const Login = () => {
       navigate('/');
     } catch (err: any) {
       setError(getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTelegramLogin = async () => {
+    setError('');
+    const tg = (window as any).Telegram?.WebApp;
+    
+    if (!tg || !tg.initData) {
+      setError('Telegram not detected. Are you opening this inside Telegram?');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signInWithTelegram(tg.initData);
+      navigate('/');
+    } catch (err: any) {
+      console.error("Telegram Auth Error:", err);
+      setError(err.message || 'Telegram authentication failed.');
     } finally {
       setLoading(false);
     }
@@ -122,6 +143,24 @@ const Login = () => {
              </button>
 
            </form>
+
+           <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/5"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-surface px-4 text-gray-500 font-bold">Or continue with</span>
+              </div>
+           </div>
+
+           <button 
+             onClick={handleTelegramLogin}
+             disabled={loading}
+             className="w-full bg-[#24A1DE]/10 hover:bg-[#24A1DE]/20 border border-[#24A1DE]/30 text-[#24A1DE] font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all disabled:opacity-50 group shadow-lg shadow-[#24A1DE]/5"
+           >
+             <Send className="w-5 h-5 group-hover:scale-110 transition-transform" />
+             {loading ? 'PROCESSING...' : 'LOG IN WITH TELEGRAM'}
+           </button>
 
            <div className="mt-8 flex items-center justify-center gap-2">
               <span className="text-gray-400 font-medium">Don't have an account?</span>
