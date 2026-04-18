@@ -71,6 +71,8 @@ const Profile = () => {
     }
   };
 
+  const isUserVerified = profileData?.isVerified === true || profileData?.verificationStatus === 'approved';
+
   const MENU_ITEMS = [
     {
       title: 'Activities',
@@ -80,7 +82,7 @@ const Profile = () => {
           title: 'Sell', 
           icon: 'PlusCircle', 
           action: () => {
-            if (profileData?.isVerified) {
+            if (isUserVerified) {
               navigate('/my-sales');
             } else {
               navigate('/verification-required');
@@ -93,7 +95,7 @@ const Profile = () => {
           icon: 'ShoppingCart', 
           action: () => navigate('/my-purchases')
         },
-        { id: '3', title: 'Verify', icon: 'CheckCircle', action: () => navigate('/verify') },
+        ...(!isUserVerified ? [{ id: '3', title: 'Verify', icon: 'CheckCircle', action: () => navigate('/verify') }] : []),
       ],
     },
     {
