@@ -47,8 +47,8 @@ const UploadImages = () => {
   const handleImagePick = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 10 * 1024 * 1024) { // Increased to 10MB for Cloudinary
-          showToast("Image too large. Please select an image under 10MB.", "error");
+      if (file.size > 20 * 1024 * 1024) { // Increased to 20MB for Cloudinary
+          showToast("Image too large. Please select an image under 20MB.", "error");
           return;
       }
       // setError(''); removed
@@ -73,14 +73,12 @@ const UploadImages = () => {
     try {
       if (!user) throw new Error("Not logged in");
 
-      // 1. Upload images to Cloudinary
+      // 1. Upload images to Cloudinary in PARALLEL (Faster!)
       const validImages = images.filter((img: ImageItem | null): img is ImageItem => img !== null);
       
-      const imageUrls: string[] = [];
-      for(const image of validImages) {
-          const remoteUrl = await uploadToCloudinary(image.dataUri);
-          imageUrls.push(remoteUrl);
-      }
+      const imageUrls = await Promise.all(
+          validImages.map(image => uploadToCloudinary(image.dataUri))
+      );
 
       const priceValue = parseFloat(listingData.price);
       const categoryStr = listingData.category === 'social_media' 
@@ -217,7 +215,7 @@ const UploadImages = () => {
         <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center">
             <div className="bg-white dark:bg-surface p-6 rounded-2xl flex flex-col items-center">
                 <div className="w-10 h-10 border-4 border-[#667eea] border-t-transparent rounded-full animate-spin"></div>
-                <span className="mt-4 text-[14px] font-semibold text-[#2D3748] dark:text-white">Uploading Images...</span>
+                <span className="mt-4 text-[14px] font-semibold text-[#2D3748] dark:text-white">Accelerated Upload...</span>
             </div>
         </div>
       )}

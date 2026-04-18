@@ -24,13 +24,15 @@ export const uploadToCloudinary = async (fileData: string): Promise<string> => {
             body: formData,
         });
 
+        const data = await response.json();
+        
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error?.message || "Cloudinary Upload Failed");
+            console.error("Cloudinary Detailed Error:", data);
+            throw new Error(data.error?.message || `Cloudinary Error (${response.status})`);
         }
 
-        const data = await response.json();
         return data.secure_url;
+
     } catch (error) {
         console.error("Cloudinary Error:", error);
         throw error;

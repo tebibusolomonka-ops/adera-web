@@ -2,11 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, CheckCircle, AlertTriangle, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { getUserProfile, updateUserProfile, checkFinNumberExists } from '../services/user_service';
+import { uploadToCloudinary } from '../services/cloudinary';
 
 const Verification = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { showToast } = useToast();
   
   const [status, setStatus] = useState<'initial' | 'pending' | 'approved' | 'rejected'>('initial');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,6 +47,10 @@ const Verification = () => {
   const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 20 * 1024 * 1024) {
+          showToast("Image too large. Please select an image under 20MB.", "error");
+          return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setIdImage(reader.result as string);
@@ -55,16 +62,16 @@ const Verification = () => {
   const handleSubmit = async () => {
     // Validation
     if (!firstName || !lastName || !phone || !bank || !idImage) {
-        alert('Please fill all required fields and upload an ID.');
+        showToast('Please fill all required fields and upload an ID.', 'error');
         return;
     }
     if (bank && !accountNumber) {
-        alert('Please enter your bank account number.');
+        showToast('Please enter your bank account number.', 'error');
         return;
     }
 
     if (!finNumber || finNumber.length !== 12 || isNaN(Number(finNumber))) {
-       alert('Please enter a valid 12-digit National ID (FIN).');
+        showToast('Please enter a valid 12-digit National ID (FIN).', 'error');
         return;
     }
 
@@ -75,12 +82,15 @@ const Verification = () => {
             // Check uniqueness
             const exists = await checkFinNumberExists(finNumber);
             if (exists) {
-                alert('This National ID (FIN) is already linked to another account.');
+                showToast('This National ID (FIN) is already linked to another account.', 'error');
                 setIsSubmitting(false);
                 return;
             }
 
-            // Update Firestore Profile
+            // 1. Upload ID to Cloudinary
+            const idProofUrl = await uploadToCloudinary(idImage);
+
+            // 2. Update Firestore Profile
             await updateUserProfile(user.uid, {
                 verificationStatus: 'pending',
                 firstName, 
@@ -90,15 +100,16 @@ const Verification = () => {
                 bank,
                 accountNumber,
                 finNumber,
-                idImageUrl: idImage, // Save the ID image base64
+                idImageUrl: idProofUrl, 
                 createdAt: Date.now() 
             });
             
+            showToast("Verification Submitted Successfully!", "success");
             setStatus('pending');
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Submission failed", error);
-        alert("Failed to submit verification. Please try again.");
+        showToast(error.message || "Failed to submit verification.", "error");
     } finally {
         setIsSubmitting(false);
     }
