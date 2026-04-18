@@ -34,24 +34,29 @@ export const createNotification = async (
       createdAt: serverTimestamp(),
     });
 
-    // --- TELEGRAM BOT FORWARDING ---
+    // --- SECURE TELEGRAM BOT FORWARDING ---
     try {
        const userSnap = await getDoc(doc(db, 'users', userId));
        if (userSnap.exists()) {
            const userData = userSnap.data();
-           if (userData.telegramChatId) {
+           const currentUser = auth.currentUser;
+
+           if (userData.telegramChatId && currentUser) {
+               // Get the ID Token to prove identity to our Vercel Backend
+               const idToken = await currentUser.getIdToken();
                const telegramMessage = `🔔 *${title}*\n\n${message}`;
                
-               // SECURE VERCEL BACKEND ROUTE 
-               // The frontend never touches the Token. It just asks our Vercel Server to do it.
                fetch(`/api/telegram`, {
                    method: 'POST',
-                   headers: { 'Content-Type': 'application/json' },
+                   headers: { 
+                       'Content-Type': 'application/json',
+                       'Authorization': `Bearer ${idToken}` 
+                   },
                    body: JSON.stringify({
                        chat_id: userData.telegramChatId,
                        text: telegramMessage
                    })
-               }).catch(e => console.error("Secure API Error:", e)); // Silent fail if network issue
+               }).catch(e => console.error("Secure API Error:", e));
            }
        }
     } catch (e) {

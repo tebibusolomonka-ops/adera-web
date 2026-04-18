@@ -100,18 +100,21 @@ const PaymentMethods = () => {
             return;
         }
 
-        try {
-            setLoading(true);
+            const totalPrice = Number(data.price);
+            const basePrice = data.basePrice !== undefined ? Number(data.basePrice) : totalPrice / 1.07;
+            const platformFee = data.platformFee !== undefined ? Number(data.platformFee) : (totalPrice - basePrice);
 
             // Create Transaction in Firestore using atomic lock
             const transactionId = await lockListingForPayment(
                 data.id,
                 user.uid,
                 data.sellerId || 'unknown_seller',
-                Number(data.price) * 0.93, // Store Net Payout (Listing Price - 7%)
+                totalPrice, // Store Full Paid Amount (Total)
                 {
                     title: data.title,
                     imageUrl: data.image_url || data.imageUri || '',
+                    basePrice,
+                    platformFee
                 }
             );
 
