@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Eye, EyeOff, Loader2, AlertTriangle } from 'lucide-react';
 import { db } from '../firebase';
-import { doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import { createNotification } from '../services/notification_service';
 
@@ -16,7 +16,7 @@ const getValidImageUrl = (url?: string) => {
 const ReleaseCredentials = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = useAuth();
+    
     
     const { item: initialItem, transactionId } = location.state || {};
     const [item, setItem] = useState(initialItem || { id: transactionId });
