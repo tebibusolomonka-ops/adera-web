@@ -102,9 +102,11 @@ const PaymentMethods = () => {
         try {
             setLoading(true);
 
-            const totalPrice = Number(data.price);
-            const basePrice = data.basePrice !== undefined ? Number(data.basePrice) : totalPrice / 1.07;
-            const platformFee = data.platformFee !== undefined ? Number(data.platformFee) : (totalPrice - basePrice);
+            // data.price = base price entered by seller (e.g. 20,000)
+            // Total buyer pays = basePrice * 1.07 (e.g. 21,400)
+            const basePrice = Number(data.price);
+            const platformFee = Math.round(basePrice * 0.07 * 100) / 100;
+            const totalPrice = Math.round((basePrice + platformFee) * 100) / 100;
 
             // Create Transaction in Firestore using atomic lock
             const transactionId = await lockListingForPayment(
