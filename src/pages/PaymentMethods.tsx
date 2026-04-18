@@ -97,6 +97,8 @@ const PaymentMethods = () => {
         }
         if (!user) {
             alert('You must be logged in to make a purchase.');
+            return;
+        }
         try {
             setLoading(true);
 
