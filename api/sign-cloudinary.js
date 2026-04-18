@@ -1,4 +1,17 @@
 import crypto from 'crypto';
+import admin from 'firebase-admin';
+
+// Initialize Firebase Admin (Singleton)
+if (!admin.apps.length) {
+    try {
+        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+        });
+    } catch (e) {
+        console.error('Firebase Admin Init Error:', e);
+    }
+}
 
 export default async function handler(req, res) {
     // Handle CORS
@@ -16,6 +29,20 @@ export default async function handler(req, res) {
     }
 
     try {
+        // 🔒 STEP 1: Verify the user is a logged-in Adera user
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Unauthorized: No token provided' });
+        }
+
+        const idToken = authHeader.split('Bearer ')[1];
+        try {
+            await admin.auth().verifyIdToken(idToken);
+        } catch {
+            return res.status(401).json({ error: 'Unauthorized: Invalid or expired token' });
+        }
+
+        // 🔑 STEP 2: Generate Cloudinary signature
         const apiSecret = process.env.CLOUDINARY_API_SECRET;
         const apiKey = process.env.CLOUDINARY_API_KEY;
 
@@ -27,8 +54,6 @@ export default async function handler(req, res) {
         const timestamp = Math.round((new Date()).getTime() / 1000);
         const { folder, upload_preset } = req.body || {};
 
-        // Build params to sign
-        // Order is alphabetical — MUST match what the client sends to Cloudinary
         const paramsToSign = {
             timestamp: timestamp.toString(),
             ...(folder && { folder }),
@@ -57,3 +82,4 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
