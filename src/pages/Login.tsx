@@ -10,13 +10,9 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // *** THE FIX: Automatic Navigation ***
-  // As soon as the user state becomes truthy, we navigate home.
-  // This solves the "double click" bug because the page moves 
-  // the instant Firebase recognizes the session.
   useEffect(() => {
     if (user) {
-      console.log("User detected, navigating home...");
+      console.log("Session active, entering marketplace...");
       navigate('/', { replace: true });
     }
   }, [user, navigate]);
@@ -26,98 +22,99 @@ const Login = () => {
     const tg = (window as any).Telegram?.WebApp;
     
     if (!tg || !tg.initData) {
-      setError('Telegram not detected. Please open this app inside Telegram.');
+      setError('Telegram not detected. Please open Adera inside the Telegram App.');
       return;
     }
 
     setLoading(true);
     try {
       await signInWithTelegram(tg.initData);
-      // We don't call navigate() here anymore; the useEffect above handles it!
     } catch (err: any) {
-      console.error("Telegram Auth Error:", err);
-      setError(err.message || 'Telegram authentication failed.');
+      console.error("Auth Exception:", err);
+      setError(err.message || 'Authentication failed.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background relative overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-background pb-10">
       
-      {/* Decorative Background */}
-      <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-b-[80px] shadow-2xl">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="flex-1 flex flex-col justify-center px-8 relative z-10 pt-10 pb-20">
+      {/* Signature Adera Gradient Header */}
+      <div className="bg-gradient-to-br from-[#667eea] to-[#764ba2] pt-12 pb-24 px-8 rounded-b-[40px] shadow-lg shadow-primary-900/20 text-center relative overflow-hidden">
+        {/* Subtle geometric pattern overlay */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none" 
+             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
         
-        {/* Logo/Icon Area */}
-        <div className="flex flex-col items-center mb-12 animate-in fade-in slide-in-from-top-4 duration-1000">
-           <div className="w-20 h-20 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
+        <div className="relative z-10 animate-in fade-in duration-700">
+           <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 border border-white/20 shadow-xl">
               <ShieldCheck className="w-10 h-10 text-white" />
            </div>
-           <h1 className="text-4xl font-black text-white text-center tracking-tight leading-tight mb-2">
-             Secure<br/>Access
-           </h1>
-           <p className="text-white/70 font-medium text-center max-w-[240px]">
-             Experience one-tap secure authentication with Telegram.
-           </p>
-        </div>
-
-        <div className="bg-surface rounded-[40px] p-8 shadow-2xl border border-white/5 w-full max-w-md mx-auto relative overflow-hidden transition-all duration-500">
-           
-           <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#667eea] via-[#e14fad] to-[#764ba2]"></div>
-
-           {error && (
-             <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl mb-8 text-sm font-bold text-center animate-shake">
-               {error}
-             </div>
-           )}
-
-           <div className="space-y-8">
-              <div className="space-y-2">
-                 <h2 className="text-2xl font-bold text-white text-center">Identity Proof</h2>
-                 <p className="text-gray-400 text-sm md:text-base text-center font-medium">
-                    Automated, cryptographically verified login. No passwords, no SMS, zero friction.
-                 </p>
-              </div>
-
-              <button 
-                onClick={handleTelegramLogin}
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-[#24A1DE] to-[#24A1DE] hover:opacity-90 text-white font-black py-5 rounded-[24px] flex items-center justify-center gap-4 transition-all shadow-xl shadow-[#24A1DE]/20 disabled:opacity-50 group relative overflow-hidden active:scale-95"
-              >
-                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-12"></div>
-                {loading ? (
-                   <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <Send className="w-6 h-6 rotate-12 group-hover:rotate-0 transition-transform" />
-                    <span className="tracking-widest uppercase">Continue with Telegram</span>
-                  </>
-                )}
-              </button>
-
-              <div className="grid grid-cols-2 gap-4">
-                 <div className="bg-surfaceLight/50 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/5">
-                    <Zap className="w-5 h-5 text-[#b18cff]" />
-                    <span className="text-[10px] uppercase tracking-widest font-black text-gray-500">Instant</span>
-                 </div>
-                 <div className="bg-surfaceLight/50 p-4 rounded-2xl flex flex-col items-center gap-2 border border-white/5">
-                    <ShieldCheck className="w-5 h-5 text-[#2ecc71]" />
-                    <span className="text-[10px] uppercase tracking-widest font-black text-gray-500">Secure</span>
-                 </div>
-              </div>
-
-              <p className="text-[11px] text-gray-500 text-center leading-relaxed font-medium px-4">
-                 By continuing, you agree to our <span className="text-white cursor-pointer hover:underline">Terms of Service</span> and <span className="text-white cursor-pointer hover:underline">Privacy Policy</span>.
-              </p>
-           </div>
-
+           <h1 className="text-3xl font-black text-white tracking-tight mb-2 uppercase">Adera Gateway</h1>
+           <p className="text-white/80 text-sm font-medium">Your Secure Entry to Digital Trading</p>
         </div>
       </div>
+
+      <div className="px-6 -mt-12 max-w-lg mx-auto w-full">
+        <div className="bg-surface rounded-3xl p-8 shadow-2xl border border-white/5 relative">
+          
+          {error && (
+             <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-8 text-sm font-bold text-center">
+               {error}
+             </div>
+          )}
+
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <h2 className="text-xl font-extrabold text-white">Identity Verification</h2>
+              <p className="text-gray-400 text-[14px] leading-relaxed font-medium">
+                To keep our marketplace safe, we use **Telegram Native ID**. 
+                This ensures every buyer and seller is a real person.
+              </p>
+            </div>
+
+            <button 
+              onClick={handleTelegramLogin}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:shadow-lg hover:shadow-[#667eea]/20 text-white font-bold py-5 rounded-2xl flex items-center justify-center gap-4 transition-all active:scale-[0.98] disabled:opacity-50"
+            >
+              {loading ? (
+                 <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <Send className="w-5 h-5 text-white" />
+                  <span className="tracking-wide text-[16px]">ENTER MARKETPLACE</span>
+                </>
+              )}
+            </button>
+
+            {/* Feature Badges - Match Home Page Category Style */}
+            <div className="grid grid-cols-2 gap-4">
+               <div className="bg-surfaceLight p-4 rounded-xl flex items-center gap-3 border border-white/5">
+                  <div className="w-8 h-8 rounded-lg bg-[#b18cff]/10 flex items-center justify-center">
+                    <Zap className="w-4 h-4 text-[#b18cff]" />
+                  </div>
+                  <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Instant</span>
+               </div>
+               <div className="bg-surfaceLight p-4 rounded-xl flex items-center gap-3 border border-white/5">
+                  <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                    <ShieldCheck className="w-4 h-4 text-green-500" />
+                  </div>
+                  <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Verified</span>
+               </div>
+            </div>
+
+            <div className="pt-4 text-center">
+               <p className="text-[12px] text-gray-500 font-medium leading-relaxed italic">
+                 "Trade with confidence. Encrypted by Telegram."
+               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
       
       <style>{`
         @keyframes splashFadeIn {
