@@ -12,6 +12,7 @@
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "firebase": "^12.10.0",
+    "firebase-admin": "^13.6.1",
     "lucide-react": "^0.577.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
