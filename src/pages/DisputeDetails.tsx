@@ -31,6 +31,7 @@ const DisputeDetails = () => {
     const [modalImageUri, setModalImageUri] = useState<string | null>(null);
     
     const [isUploading, setIsUploading] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
