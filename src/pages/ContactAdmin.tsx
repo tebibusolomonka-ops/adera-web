@@ -290,8 +290,8 @@ const ContactAdmin = () => {
       if (e.target.files && e.target.files[0]) {
           const file = e.target.files[0];
           
-          if (file.size > 700000) {
-              alert("Image Too Large. Please use a smaller image under 700KB.");
+          if (file.size > 10 * 1024 * 1024) {
+              alert("Image Too Large. Please use an image under 10MB.");
               return;
           }
 

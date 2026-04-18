@@ -44,8 +44,8 @@ const UploadImages = () => {
   const handleImagePick = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) { // Keep under 1MB for demo
-          setError("Image too large. Please select a smaller image (< 1MB).");
+      if (file.size > 10 * 1024 * 1024) { // Increased to 10MB for Cloudinary
+          setError("Image too large. Please select an image under 10MB.");
           return;
       }
       setError('');
