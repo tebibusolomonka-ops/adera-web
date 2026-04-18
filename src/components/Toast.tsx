@@ -1,5 +1,5 @@
 import { ShieldAlert, CheckCircle, Info, X } from 'lucide-react';
-import { useToast, ToastMessage } from '../context/ToastContext';
+import { useToast, type ToastMessage } from '../context/ToastContext';
 
 export const ToastContainer = () => {
     const { toasts, removeToast } = useToast();
