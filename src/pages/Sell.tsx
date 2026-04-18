@@ -19,7 +19,7 @@ const Sell = () => {
   useEffect(() => {
     if (user) {
       getUserProfile(user.uid).then(profile => {
-        if (!profile?.isVerified || profile?.verificationStatus !== 'approved') {
+        if (!profile?.isVerified && profile?.verificationStatus !== 'approved') {
           navigate('/verification-required', { replace: true });
         } else {
           setIsCheckingAuth(false);
