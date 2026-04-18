@@ -4,6 +4,7 @@ import { ChevronLeft, Eye, EyeOff, Loader2, AlertTriangle } from 'lucide-react';
 import { db } from '../firebase';
 import { doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
+import { createNotification } from '../services/notification_service';
 
 const getValidImageUrl = (url?: string) => {
     if (!url || url.startsWith('file://')) {
@@ -65,19 +66,17 @@ const ReleaseCredentials = () => {
             });
 
             if (item.buyerId) {
-                await addDoc(collection(db, 'notifications'), {
-                    userId: item.buyerId,
-                    senderId: user?.uid || item.sellerId,
-                    title: isTelegram ? 'Ownership Transferred' : 'Credentials Released',
-                    message: isTelegram 
+                await createNotification(
+                    item.buyerId,
+                    isTelegram ? 'Ownership Transferred' : 'Credentials Released',
+                    isTelegram 
                         ? `Seller has confirmed the transfer of ${item.title || item.listingDetails?.title}. Please verify and confirm.`
                         : `Credentials for ${item.title || item.listingDetails?.title} have been released. Please verify them.`,
-                    type: 'success',
-                    relatedId: item.id,
-                    read: false,
-                    createdAt: serverTimestamp(),
-                });
+                    'success',
+                    item.id
+                );
             }
+
 
             setLoading(false);
             navigate('/waiting-for-confirmation', { state: { transactionId: item.id }, replace: true });
