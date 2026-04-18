@@ -174,7 +174,7 @@ export const lockListingForPayment = async (
     buyerId: string, 
     sellerId: string, 
     amount: number, 
-    listingDetails: { title: string, imageUrl: string },
+    listingDetails: { title: string, imageUrl: string, basePrice?: number, platformFee?: number },
     sellerPayout?: number
 ): Promise<string> => {
     try {

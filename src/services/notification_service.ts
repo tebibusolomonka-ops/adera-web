@@ -1,5 +1,5 @@
 import { getFirestore, collection, addDoc, doc, updateDoc, query, where, onSnapshot, serverTimestamp, getDoc } from 'firebase/firestore';
-import { app } from '../firebase';
+import { app, auth } from '../firebase';
 
 export interface Notification {
   id: string;
