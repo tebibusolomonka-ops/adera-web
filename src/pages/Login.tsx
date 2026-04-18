@@ -68,12 +68,12 @@ const Login = () => {
            </div>
            
            <div className="mt-8 text-center">
-              <h1 className="text-4xl font-black text-white tracking-tighter sm:text-5xl uppercase italic mb-2">
-                 Welcome<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#667eea] to-[#e14fad]">Back</span>
+              <h1 className="text-5xl font-black text-white tracking-tighter uppercase italic mb-2">
+                 ADERA
               </h1>
               <div className="flex items-center justify-center gap-2">
                  <span className="h-[2px] w-8 bg-gradient-to-r from-transparent to-white/20"></span>
-                 <p className="text-[12px] font-black text-white/40 tracking-[0.3em] uppercase">Private Gateway</p>
+                 <p className="text-[12px] font-black text-white/40 tracking-[0.3em] uppercase">Digital Marketplace</p>
                  <span className="h-[2px] w-8 bg-gradient-to-l from-transparent to-white/20"></span>
               </div>
            </div>
@@ -94,9 +94,9 @@ const Login = () => {
 
              <div className="space-y-10">
                 <div className="space-y-4 text-center">
-                   <h2 className="text-2xl font-black text-white tracking-tight">CONTINUE TRADING</h2>
+                   <h2 className="text-2xl font-black text-white tracking-tight uppercase">Enter Marketplace</h2>
                    <p className="text-gray-400 text-sm font-medium leading-relaxed px-2">
-                      Join the most secure digital exchange on Telegram. No passwords, just instant access.
+                      Trade Social Media Accounts, Gaming IDs, and Digital Assets with verified security.
                    </p>
                 </div>
 
