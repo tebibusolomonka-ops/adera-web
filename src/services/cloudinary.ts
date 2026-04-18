@@ -25,8 +25,13 @@ export const uploadToCloudinary = async (fileData: string, folder?: string): Pro
             body: JSON.stringify({ folder })
         });
 
-        if (!signResponse.ok) throw new Error("Failed to get upload signature");
-        const { signature, timestamp, api_key } = await signResponse.json();
+        const signData = await signResponse.json().catch(() => ({}));
+
+        if (!signResponse.ok) {
+            throw new Error(signData.error || "Failed to get upload signature");
+        }
+        
+        const { signature, timestamp, api_key } = signData;
 
         // 3. Perform Signed Upload
         const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
