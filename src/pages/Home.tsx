@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { 
   Search, 
   Bell, 
@@ -19,6 +20,7 @@ import {
   Gamepad2,
   HelpCircle
 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { subscribeToListings } from '../services/listing_service';
 import type { Listing, Category } from '../services/listing_service';
 import { CATEGORIES } from '../data/mockData';
@@ -205,9 +207,9 @@ const Home = () => {
         {searchText.trim().length > 0 ? (
           <div className="flex flex-col bg-background flex-1 min-h-[50vh]">
             <h2 className="text-lg font-bold text-gray-400 mt-2 mb-4">Search Results</h2>
-            {listings.filter(i => i.title.toLowerCase().includes(searchText.toLowerCase())).length > 0 ? (
+            {listings.filter((i: Listing) => i.title.toLowerCase().includes(searchText.toLowerCase())).length > 0 ? (
                <div className="flex flex-col">
-                 {listings.filter(i => i.title.toLowerCase().includes(searchText.toLowerCase())).map(item => (
+                 {listings.filter((i: Listing) => i.title.toLowerCase().includes(searchText.toLowerCase())).map((item: Listing) => (
                    <RecentItemCard key={item.id} item={item} />
                  ))}
                </div>
@@ -239,7 +241,7 @@ const Home = () => {
                   </div>
                   <div className="flex overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
                     {topItems.length > 0 ? (
-                      topItems.map(item => <TopItemCard key={item.id} item={item} />)
+                      topItems.map((item: Listing) => <TopItemCard key={item.id} item={item} />)
                     ) : (
                       <p className="text-gray-500 italic text-sm">No items found.</p>
                     )}
@@ -254,7 +256,7 @@ const Home = () => {
                   </div>
                   <div className="flex flex-wrap -mx-2">
                     {categories.length > 0 ? (
-                      categories.slice(0, 8).map(cat => {
+                      categories.slice(0, 8).map((cat: Category) => {
                         const IconComp = getIconComponent(cat.icon);
                         return (
                           <Link to={`/listings?title=${encodeURIComponent(cat.name)}&category=${encodeURIComponent(cat.name)}`} key={cat.id} className="w-1/4 px-2 mb-4 flex flex-col items-center hover:opacity-80 transition">
@@ -279,7 +281,7 @@ const Home = () => {
                   </div>
                   <div className="flex flex-col">
                     {recentItems.length > 0 ? (
-                       recentItems.map(item => <RecentItemCard key={item.id} item={item} />)
+                       recentItems.map((item: Listing) => <RecentItemCard key={item.id} item={item} />)
                     ) : (
                        <p className="text-gray-500 italic text-sm">No items found.</p>
                     )}
