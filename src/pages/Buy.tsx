@@ -1,19 +1,24 @@
-import { 
-  Search, 
-  ArrowLeft, 
-  Send, 
-  Instagram, 
-  Music, 
-  Twitter, 
-  Youtube, 
-  Facebook, 
-  Linkedin, 
-  MessageSquare, 
-  Globe, 
-  Pin, 
-  Phone, 
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getCategories } from '../services/listing_service';
+import type { Category } from '../services/listing_service';
+import { CATEGORIES } from '../data/mockData';
+import {
+  Search,
+  ArrowLeft,
+  Send,
+  Instagram,
+  Music,
+  Twitter,
+  Youtube,
+  Facebook,
+  Linkedin,
+  MessageSquare,
+  Globe,
+  Pin,
+  Phone,
   Gamepad2,
-  HelpCircle 
+  HelpCircle
 } from 'lucide-react';
 
 const Buy = () => {
@@ -22,16 +27,8 @@ const Buy = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    getCategories().then(data => {
-      if (data.length === 0) {
-        setCategories(CATEGORIES);
-      } else {
-        setCategories(data);
-      }
-    }).catch(err => {
-      console.error(err);
-      setCategories(CATEGORIES);
-    });
+    // Match Home.tsx: Using mock categories until DB is consistently seeded for Web
+    setCategories(CATEGORIES);
   }, []);
 
   const filteredCategories = categories.filter(category => {
@@ -84,7 +81,7 @@ const Buy = () => {
         <h2 className="text-xl font-bold text-[#764ba2] text-center mt-5 mb-4">Categories</h2>
         
         <div className="flex flex-col gap-4">
-          {filteredCategories.map(item => {
+          {filteredCategories.map((item: Category) => {
              const IconComp = getIconComponent(item.icon);
              return (
               <Link 
@@ -93,8 +90,8 @@ const Buy = () => {
                 className="flex items-center bg-surface p-4 rounded-2xl shadow-md border-l-[5px] w-full text-left transition-transform hover:-translate-y-1 mb-1"
                 style={{ borderLeftColor: item.color || '#764ba2' }}
               >
-                <div className="w-12 flex justify-center mr-3">
-                  <IconComp className="w-7 h-7 text-white" />
+                <div className="w-12 h-12 bg-background/50 rounded-xl flex items-center justify-center mr-4 shadow-inner">
+                  <IconComp className="w-6 h-6" style={{ color: item.color || '#fff' }} />
                 </div>
                 <span className="text-lg font-bold text-white">{item.name}</span>
               </Link>
