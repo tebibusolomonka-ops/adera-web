@@ -79,7 +79,7 @@ const MySales = () => {
         navigate('/payment-verification', { state: { item } });
         return;
     }
-    if (item.status === 'approved' || item.status === 'seller_released') {
+    if (item.status === 'approved' || item.status === 'seller_released' || item.status === 'paid') {
         navigate('/release-credentials', { state: { item } });
         return;
     }
@@ -101,6 +101,11 @@ const MySales = () => {
     }
     
     // Fallback if status doesn't match above (e.g. cancelled)
+    if (item.status === 'cancelled' || item.status === 'failed' || item.status === 'rejected') {
+         navigate(`/item/${item.listingId}`);
+         return;
+    }
+
     alert(`This sale is currently: ${item.status.replace('_', ' ')}`);
   };
 

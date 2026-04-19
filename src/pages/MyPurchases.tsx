@@ -70,13 +70,38 @@ const MyPurchases = () => {
   };
 
   const handlePress = (item: any) => {
-    // Navigate based on status exactly like mobile app
     if (item.status === 'completed') {
         navigate('/transaction-completed', { state: { transaction: { ...item, type: 'purchase' } } });
         return;
     }
-    // General detail navigation
-    navigate(`/purchases/${item.id}`, { state: { item } });
+    
+    if (item.status === 'pending_approval' || item.status === 'pending' || item.status === 'pending_sale') {
+        navigate('/payment-verification', { state: { item } });
+        return;
+    }
+
+    if (item.status === 'approved' || item.status === 'seller_released' || item.status === 'released' || item.status === 'paid') {
+        navigate('/view-credentials', { state: { item } });
+        return;
+    }
+
+    if (item.status === 'disputed') {
+        navigate('/dispute-details', { state: { transaction: item, role: 'buyer' } });
+        return;
+    }
+
+    if (item.status === 'dispute_rejected') {
+        navigate('/dispute-outcome', { state: { outcome: 'rejected', transaction: item, role: 'buyer' } });
+        return;
+    }
+
+    if (item.status === 'dispute_completed') {
+        navigate('/dispute-solved', { state: { transaction: item, role: 'buyer' } });
+        return;
+    }
+
+    // General detail navigation fallback
+    navigate(`/item/${item.listingId}`);
   };
 
   return (
