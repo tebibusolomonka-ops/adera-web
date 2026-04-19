@@ -4,6 +4,7 @@ import { ChevronLeft, Copy, Smartphone, Building2, UploadCloud, Edit3, Loader2 }
 import { useAuth } from '../context/AuthContext';
 import { lockListingForPayment } from '../services/transaction_service';
 import { db } from '../firebase';
+import { uploadToCloudinary } from '../services/cloudinary';
 import { doc, updateDoc } from 'firebase/firestore';
 
 const getValidImageUrl = (url?: string) => {
@@ -108,12 +109,15 @@ const PaymentMethods = () => {
             const platformFee = Number(data.platformFee || 0);
             const totalPrice = Number(data.price || basePrice + platformFee);
 
-            // Create Transaction in Firestore using atomic lock
+            // 1. Upload Screenshot to Cloudinary
+            const paymentProofUrl = await uploadToCloudinary(screenshotBase64, 'payment_proofs');
+
+            // 2. Create Transaction in Firestore using atomic lock
             const transactionId = await lockListingForPayment(
                 data.id,
                 user.uid,
                 data.sellerId || 'unknown_seller',
-                totalPrice, // Store Full Paid Amount (Total)
+                totalPrice,
                 {
                     title: data.title,
                     imageUrl: data.image_url || data.imageUri || '',
@@ -122,9 +126,9 @@ const PaymentMethods = () => {
                 }
             );
 
-            // Update the transaction with payment proof
+            // 3. Update the transaction with the Cloudinary URL
             await updateDoc(doc(db, 'transactions', transactionId), {
-                paymentProof: screenshotBase64
+                paymentProof: paymentProofUrl
             });
 
             setLoading(false);
