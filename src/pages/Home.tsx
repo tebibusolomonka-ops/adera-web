@@ -1,7 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Search, Bell, Settings2, ShieldCheck, UserCircle, Eye } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import * as LucideIcons from 'lucide-react';
+import { 
+  Search, 
+  Bell, 
+  Settings2, 
+  ShieldCheck, 
+  UserCircle, 
+  Eye,
+  Send,
+  Instagram,
+  Music,
+  Twitter,
+  Youtube,
+  Facebook,
+  Linkedin,
+  MessageSquare,
+  Globe,
+  Pin,
+  Phone,
+  Gamepad2,
+  HelpCircle
+} from 'lucide-react';
 import { subscribeToListings } from '../services/listing_service';
 import type { Listing, Category } from '../services/listing_service';
 import { CATEGORIES } from '../data/mockData';
@@ -115,23 +132,22 @@ const Home = () => {
   const recentItems = listings.slice(0, 10);
 
   const getIconComponent = (iconName: string) => {
-    const mapping: Record<string, string> = {
-      'telegram': 'Send',
-      'instagram': 'Instagram',
-      'music-note': 'Music',
-      'twitter': 'Twitter',
-      'youtube': 'Youtube',
-      'facebook': 'Facebook',
-      'linkedin': 'Linkedin',
-      'discord': 'MessagesSquare',
-      'reddit': 'Globe',
-      'pinterest': 'Pin',
-      'whatsapp': 'Phone',
-      'controller-classic': 'Gamepad2'
+    const iconMap: Record<string, React.ElementType> = {
+      'telegram': Send,
+      'instagram': Instagram,
+      'music-note': Music,
+      'twitter': Twitter,
+      'youtube': Youtube,
+      'facebook': Facebook,
+      'linkedin': Linkedin,
+      'discord': MessageSquare,
+      'reddit': Globe,
+      'pinterest': Pin,
+      'whatsapp': Phone,
+      'controller-classic': Gamepad2,
     };
     
-    const lucideName = mapping[iconName] || (iconName ? iconName.charAt(0).toUpperCase() + iconName.slice(1) : '');
-    return (LucideIcons as any)[lucideName] || LucideIcons.HelpCircle;
+    return iconMap[iconName] || HelpCircle;
   };
 
   return (

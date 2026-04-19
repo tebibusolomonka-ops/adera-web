@@ -1,10 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getCategories } from '../services/listing_service';
-import type { Category } from '../services/listing_service';
-import { CATEGORIES } from '../data/mockData';
-import * as LucideIcons from 'lucide-react';
+import { 
+  Search, 
+  ArrowLeft, 
+  Send, 
+  Instagram, 
+  Music, 
+  Twitter, 
+  Youtube, 
+  Facebook, 
+  Linkedin, 
+  MessageSquare, 
+  Globe, 
+  Pin, 
+  Phone, 
+  Gamepad2,
+  HelpCircle 
+} from 'lucide-react';
 
 const Buy = () => {
   const navigate = useNavigate();
@@ -30,23 +40,22 @@ const Buy = () => {
   });
 
   const getIconComponent = (iconName: string) => {
-    const mapping: Record<string, string> = {
-      'telegram': 'Send',
-      'instagram': 'Instagram',
-      'music-note': 'Music',
-      'twitter': 'Twitter',
-      'youtube': 'Youtube',
-      'facebook': 'Facebook',
-      'linkedin': 'Linkedin',
-      'discord': 'MessagesSquare',
-      'reddit': 'Globe',
-      'pinterest': 'Pin',
-      'whatsapp': 'Phone',
-      'controller-classic': 'Gamepad2'
+    const iconMap: Record<string, React.ElementType> = {
+      'telegram': Send,
+      'instagram': Instagram,
+      'music-note': Music,
+      'twitter': Twitter,
+      'youtube': Youtube,
+      'facebook': Facebook,
+      'linkedin': Linkedin,
+      'discord': MessageSquare,
+      'reddit': Globe,
+      'pinterest': Pin,
+      'whatsapp': Phone,
+      'controller-classic': Gamepad2,
     };
     
-    const lucideName = mapping[iconName] || iconName.charAt(0).toUpperCase() + iconName.slice(1);
-    return (LucideIcons as any)[lucideName] || LucideIcons.HelpCircle;
+    return iconMap[iconName] || HelpCircle;
   };
 
   return (
@@ -55,7 +64,7 @@ const Buy = () => {
       <div className="sticky top-0 z-10 bg-surface px-5 pt-4 pb-3 border-b border-white/5 shadow-md">
         <div className="flex items-center mb-3 mt-1">
           <button onClick={() => navigate(-1)} className="p-1 -ml-1 mr-2 hover:bg-white/10 rounded-full transition">
-            <LucideIcons.ArrowLeft className="w-6 h-6 text-white" />
+            <ArrowLeft className="w-6 h-6 text-white" />
           </button>
           <span className="text-xl font-bold text-white">Categories</span>
         </div>
