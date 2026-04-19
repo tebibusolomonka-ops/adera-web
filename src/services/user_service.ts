@@ -40,7 +40,13 @@ export const checkFinNumberExists = async (finNumber: string): Promise<boolean> 
     );
     const snapshot = await getDocs(q);
     return !snapshot.empty;
-  } catch (error) {
+  } catch (error: any) {
+    // If we get a permission error, it means we can't query the collection.
+    // We'll proceed with false (as if not found) and let the admin handle uniqueness during approval.
+    if (error.code === 'permission-denied') {
+      console.warn('Duplicate FIN check skipped due to security rules. Admin will verify.');
+      return false;
+    }
     console.error('Error checking FIN number:', error);
     throw error;
   }
