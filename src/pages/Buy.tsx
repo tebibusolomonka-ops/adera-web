@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCategories } from '../services/listing_service';
 import type { Category } from '../services/listing_service';
 import { CATEGORIES } from '../data/mockData';
 import {
