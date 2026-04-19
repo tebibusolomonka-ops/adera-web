@@ -93,16 +93,16 @@ export const RECENT_ITEMS = [
 ];
 
 export const CATEGORIES = [
-  { id: '1', name: 'Telegram', icon: 'Send', color: '#0088cc' },
-  { id: '2', name: 'Instagram', icon: 'Instagram', color: '#E1306C' },
-  { id: '3', name: 'TikTok', icon: 'Video', color: '#000000' },
-  { id: '4', name: 'X (Twitter)', icon: 'Twitter', color: '#000000' },
-  { id: '5', name: 'YouTube', icon: 'Youtube', color: '#FF0000' },
-  { id: '6', name: 'Facebook', icon: 'Facebook', color: '#1877F2' },
-  { id: '7', name: 'LinkedIn', icon: 'Linkedin', color: '#0A66C2' },
-  { id: '8', name: 'Gaming', icon: 'Gamepad2', color: '#9146FF' },
-  { id: '9', name: 'Discord', icon: 'MessageSquare', color: '#5865F2' },
-  { id: '10', name: 'Reddit', icon: 'MessageCircle', color: '#FF4500' },
-  { id: '11', name: 'Pinterest', icon: 'Image', color: '#BD081C' },
-  { id: '12', name: 'WhatsApp', icon: 'Phone', color: '#25D366' },
+  { id: '1', name: 'Telegram', icon: 'telegram', color: '#0088cc' },
+  { id: '2', name: 'Instagram', icon: 'instagram', color: '#E1306C' },
+  { id: '3', name: 'TikTok', icon: 'music-note', color: '#000000' },
+  { id: '4', name: 'X (Twitter)', icon: 'twitter', color: '#000000' },
+  { id: '5', name: 'YouTube', icon: 'youtube', color: '#FF0000' },
+  { id: '6', name: 'Facebook', icon: 'facebook', color: '#1877F2' },
+  { id: '7', name: 'LinkedIn', icon: 'linkedin', color: '#0A66C2' },
+  { id: '8', name: 'Gaming', icon: 'controller-classic', color: '#9146FF' },
+  { id: '9', name: 'Discord', icon: 'discord', color: '#5865F2' },
+  { id: '10', name: 'Reddit', icon: 'reddit', color: '#FF4500' },
+  { id: '11', name: 'Pinterest', icon: 'pinterest', color: '#BD081C' },
+  { id: '12', name: 'WhatsApp', icon: 'whatsapp', color: '#25D366' },
 ];

@@ -29,6 +29,26 @@ const Buy = () => {
     return category.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
+  const getIconComponent = (iconName: string) => {
+    const mapping: Record<string, string> = {
+      'telegram': 'Send',
+      'instagram': 'Instagram',
+      'music-note': 'Music',
+      'twitter': 'Twitter',
+      'youtube': 'Youtube',
+      'facebook': 'Facebook',
+      'linkedin': 'Linkedin',
+      'discord': 'MessagesSquare',
+      'reddit': 'Globe',
+      'pinterest': 'Pin',
+      'whatsapp': 'Phone',
+      'controller-classic': 'Gamepad2'
+    };
+    
+    const lucideName = mapping[iconName] || iconName.charAt(0).toUpperCase() + iconName.slice(1);
+    return (LucideIcons as any)[lucideName] || LucideIcons.HelpCircle;
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background pb-20 md:pb-8">
       {/* Header / Search */}
@@ -56,7 +76,7 @@ const Buy = () => {
         
         <div className="flex flex-col gap-4">
           {filteredCategories.map(item => {
-             const IconComp = (LucideIcons as any)[item.icon] || LucideIcons.HelpCircle;
+             const IconComp = getIconComponent(item.icon);
              return (
               <Link 
                 to={`/listings?title=${encodeURIComponent(item.name)}&category=${encodeURIComponent(item.name)}`}

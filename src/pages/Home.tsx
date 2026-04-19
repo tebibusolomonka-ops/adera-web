@@ -114,6 +114,26 @@ const Home = () => {
   const topItems = listings.slice(0, 5); // Just take first 5 for now 
   const recentItems = listings.slice(0, 10);
 
+  const getIconComponent = (iconName: string) => {
+    const mapping: Record<string, string> = {
+      'telegram': 'Send',
+      'instagram': 'Instagram',
+      'music-note': 'Music',
+      'twitter': 'Twitter',
+      'youtube': 'Youtube',
+      'facebook': 'Facebook',
+      'linkedin': 'Linkedin',
+      'discord': 'MessagesSquare',
+      'reddit': 'Globe',
+      'pinterest': 'Pin',
+      'whatsapp': 'Phone',
+      'controller-classic': 'Gamepad2'
+    };
+    
+    const lucideName = mapping[iconName] || (iconName ? iconName.charAt(0).toUpperCase() + iconName.slice(1) : '');
+    return (LucideIcons as any)[lucideName] || LucideIcons.HelpCircle;
+  };
+
   return (
     <div className="p-4 pt-4 pb-24 md:pb-8 flex flex-col gap-6 relative">
       <FilterModal 
@@ -219,7 +239,7 @@ const Home = () => {
                   <div className="flex flex-wrap -mx-2">
                     {categories.length > 0 ? (
                       categories.slice(0, 8).map(cat => {
-                        const IconComp = (LucideIcons as any)[cat.icon] || LucideIcons.HelpCircle;
+                        const IconComp = getIconComponent(cat.icon);
                         return (
                           <Link to={`/listings?title=${encodeURIComponent(cat.name)}&category=${encodeURIComponent(cat.name)}`} key={cat.id} className="w-1/4 px-2 mb-4 flex flex-col items-center hover:opacity-80 transition">
                             <div className="w-12 h-12 bg-surface rounded-2xl flex items-center justify-center mb-2 shadow-sm border border-white/5">
