@@ -115,7 +115,7 @@ const Profile = () => {
           title: 'Edit Profile', 
           icon: 'User', 
           action: () => {
-            if (profileData?.isVerified) {
+            if (isUserVerified) {
               navigate('/edit-profile');
             } else {
               navigate('/edit-profile-verification-required');
