@@ -7,10 +7,13 @@ import type { UserProfile } from '../services/user_service';
 import { getSellerReviews } from '../services/ReviewService';
 import type { Review } from '../services/ReviewService';
 import { useNavigate } from 'react-router-dom';
+import { uploadToCloudinary } from '../services/cloudinary';
+import { useToast } from '../context/ToastContext';
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,8 +41,9 @@ const Profile = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      if (file.size > 700000) {
-        alert("Image Too Large. Please use a smaller image under 700KB.");
+      // 8MB limit
+      if (file.size > 8388608) {
+        showToast("Image Too Large. Please use an image under 8MB.", "error");
         return;
       }
 
@@ -48,11 +52,15 @@ const Profile = () => {
         const base64Image = event.target?.result as string;
         if (user && base64Image) {
           try {
-            await updateUserProfile(user.uid, { photoURL: base64Image });
-            setProfileData(prev => prev ? { ...prev, photoURL: base64Image } : null);
+            // Upload to Cloudinary to avoid storing HUGE base64 strings in Firestore
+            const secureUrl = await uploadToCloudinary(base64Image, 'profile_pics');
+            
+            await updateUserProfile(user.uid, { photoURL: secureUrl });
+            setProfileData(prev => prev ? { ...prev, photoURL: secureUrl } : null);
+            showToast("Profile image updated successfully!", "success");
           } catch (error) {
             console.error('Failed to update profile pic', error);
-            alert("Failed to update profile picture.");
+            showToast("Failed to upload profile picture. Please try again.", "error");
           }
         }
       };

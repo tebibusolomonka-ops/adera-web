@@ -12,6 +12,8 @@ const Sell = () => {
   const navigate = useNavigate();
   const [category, setCategory] = useState<'social_media' | 'gaming' | null>(null);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isSocialPlatformDropdownOpen, setIsSocialPlatformDropdownOpen] = useState(false);
+  const [isGameNameDropdownOpen, setIsGameNameDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -176,15 +178,33 @@ const Sell = () => {
               <div className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 <div>
                   <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Social Platform</label>
-                  <select 
-                    value={socialPlatform} 
-                    onChange={e => setSocialPlatform(e.target.value)}
-                    className="w-full bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#764ba2] transition-colors appearance-none"
-                    required
-                  >
-                    <option value="" disabled>Select Platform</option>
-                    {SOCIAL_PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
-                  </select>
+                  <div className="relative">
+                    <button 
+                      type="button"
+                      onClick={() => setIsSocialPlatformDropdownOpen(!isSocialPlatformDropdownOpen)}
+                      className="w-full flex justify-between items-center bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white transition-colors hover:bg-surfaceLight/80 focus:border-[#764ba2] outline-none"
+                    >
+                      <span className={socialPlatform ? 'text-white font-medium' : 'text-gray-400'}>
+                        {socialPlatform || 'Select Platform'}
+                      </span>
+                      <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isSocialPlatformDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {isSocialPlatformDropdownOpen && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-surfaceLight border border-white/10 rounded-xl shadow-xl z-30 max-h-60 overflow-y-auto custom-scrollbar">
+                        {SOCIAL_PLATFORMS.map(p => (
+                          <button 
+                            key={p}
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-white hover:bg-white/5 border-b border-white/5 transition-colors last:border-b-0"
+                            onClick={() => { setSocialPlatform(p); setIsSocialPlatformDropdownOpen(false); }}
+                          >
+                            {p}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Username / Handle</label>
@@ -222,15 +242,33 @@ const Sell = () => {
               <div className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 <div>
                   <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Game Name</label>
-                  <select 
-                    value={gameName} 
-                    onChange={e => setGameName(e.target.value)}
-                    className="w-full bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-[#764ba2] transition-colors appearance-none"
-                    required
-                  >
-                    <option value="" disabled>Select Game</option>
-                    {GAMES_LIST.map(g => <option key={g} value={g}>{g}</option>)}
-                  </select>
+                  <div className="relative">
+                    <button 
+                      type="button"
+                      onClick={() => setIsGameNameDropdownOpen(!isGameNameDropdownOpen)}
+                      className="w-full flex justify-between items-center bg-surfaceLight border border-white/10 rounded-xl px-4 py-3 text-white transition-colors hover:bg-surfaceLight/80 focus:border-[#764ba2] outline-none"
+                    >
+                      <span className={gameName ? 'text-white font-medium' : 'text-gray-400'}>
+                        {gameName || 'Select Game'}
+                      </span>
+                      <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isGameNameDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {isGameNameDropdownOpen && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-surfaceLight border border-white/10 rounded-xl shadow-xl z-30 max-h-60 overflow-y-auto custom-scrollbar">
+                        {GAMES_LIST.map(g => (
+                          <button 
+                            key={g}
+                            type="button"
+                            className="w-full text-left px-4 py-3 text-white hover:bg-white/5 border-b border-white/5 transition-colors last:border-b-0"
+                            onClick={() => { setGameName(g); setIsGameNameDropdownOpen(false); }}
+                          >
+                            {g}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-white mb-2 border-l-2 border-[#764ba2] pl-2">Account ID</label>
@@ -275,7 +313,9 @@ const Sell = () => {
             {category && (
               <button 
                 type="submit" 
-                disabled={loading || (category === 'social_media' && isMonetized === null)}
+                disabled={loading || 
+                          (category === 'social_media' && (!socialPlatform || isMonetized === null)) || 
+                          (category === 'gaming' && !gameName)}
                 className="mt-4 w-full bg-gradient-to-r from-[#667eea] via-[#764ba2] to-[#e14fad] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-primary-600/30 transition-shadow disabled:opacity-50 tracking-wide"
               >
                 {loading ? 'Creating...' : 'CREATE LISTING'}
