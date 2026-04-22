@@ -98,7 +98,7 @@ Select a tutorial video below to learn how it works!`;
             
             if (videoInfo) {
                 // Send the requested video
-                await fetch(`https://api.telegram.org/bot${botToken}/sendVideo`, {
+                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendVideo`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -108,6 +108,21 @@ Select a tutorial video below to learn how it works!`;
                         parse_mode: 'Markdown'
                     })
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    console.error("Telegram sendVideo failed:", errorData);
+                    // Send a fallback message to the user
+                    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: `⚠️ *Error Loading Video*\n\nThe video is currently unavailable or too large for Telegram to process. You can watch it directly here:\n[Click to watch](${videoInfo.url})`,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                }
             }
         }
 
