@@ -18,19 +18,8 @@ export default async function handler(req, res) {
             const text = update.message.text;
 
             if (text === '/start') {
-                const welcomeMessage = `🌟 *Welcome to Adera Trading* 🌟
-_The Ultimate Scam-Free Digital Asset Marketplace_
-
-We ensure 100% safety for both buyers and sellers. Here is how our secure process works:
-
-1️⃣ *Listing* _(የራስህ ዋጋ fix አድርግ)_
-Post your account securely and set your own price.
-
-2️⃣ *Buying & Verification* _(ገንዘብህ ይረጋገጣል)_
-We strictly verify the buyer's payment before any transfer begins.
-
-3️⃣ *Safe Transfer* _(Accountun ስታስረክብ ብሩ direct ይለቀቃል)_
-Once the account is securely handed over, the money is instantly released!
+                const welcomeMessage = `🌟 *Adera Masterclass: እንዴት በ 1 ደቂቃ Safe Trade እናደርጋለን?* 🚀
+_How to instantly List, Verify, Buy, ena securely Transfer accounts without getting scammed._
 
 👇 *Tap a button below to watch a quick tutorial!*`;
 
@@ -85,23 +74,23 @@ Once the account is securely handed over, the money is instantly released!
             // Video Directory Map
             const videoMap = {
                 'vid_list': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857303/adera_tutorial_list_eqagnr.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776881208/adera_tutorial_list_online-video-cutter.com_i11tyg.mp4',
                     caption: '📹 *Tutorial: How to List your Account* (የራስህ ዋጋ fix አድርግ)'
                 },
                 'vid_buy': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857552/adera_tutorial_buy_ib3eaz.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776881220/adera_tutorial_buy_online-video-cutter.com_myy4lo.mp4',
                     caption: '📹 *Tutorial: How to Buy*'
                 },
                 'vid_verify': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857478/adera_tutorial_verify_gq9vc0.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776881508/adera_tutorial_verify_online-video-cutter.com_wvn6xn.mp4',
                     caption: '🛡️ *Tutorial: Buying & Verification* (ገንዘብህ ይረጋገጣል)'
                 },
                 'vid_transfer': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857347/adera_tutorial_transfer_jux9yf.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776881211/adera_tutorial_transfer_online-video-cutter.com_vuepfn.mp4',
                     caption: '🔄 *Tutorial: Safe Transfer* (Accountun ስታስረክብ ብሩ direct ይለቀቃል)'
                 },
                 'vid_dispute': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857459/adera_tutorial_dispute_ypowqs.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776881154/adera_tutorial_dispute_online-video-cutter.com_wzkkwi.mp4',
                     caption: '⚖️ *Tutorial: Dispute Resolution*'
                 }
             };
