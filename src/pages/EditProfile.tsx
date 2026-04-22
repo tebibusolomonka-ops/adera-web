@@ -3,10 +3,12 @@ import { ChevronLeft, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile, updateUserProfile } from '../services/user_service';
+import { useToast } from '../context/ToastContext';
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -37,12 +39,12 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     if (!firstName || !lastName || !username) {
-      alert('Name and Username are required.');
+      showToast('Name and Username are required.', "error");
       return;
     }
 
     if (!user) {
-      alert('You must be logged in.');
+      showToast('You must be logged in.', "error");
       return;
     }
 
@@ -62,11 +64,11 @@ const EditProfile = () => {
       }
       await updateUserProfile(user.uid, updateData);
 
-      alert('Profile saved successfully!');
+      showToast('Profile saved successfully!', "success");
       setTimeout(() => navigate(-1), 1000);
     } catch (error) {
       console.error("Error saving profile:", error);
-      alert('Failed to save profile. Please try again.');
+      showToast('Failed to save profile. Please try again.', "error");
     } finally {
       setLoading(false);
     }
