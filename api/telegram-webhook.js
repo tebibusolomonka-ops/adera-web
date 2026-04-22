@@ -45,18 +45,22 @@ Once the account is securely handed over, the money is instantly released!
                         reply_markup: {
                             inline_keyboard: [
                                 [
-                                    { text: "📹 How to List", callback_data: "vid_list" },
-                                    { text: "📹 How to Buy", callback_data: "vid_buy" }
+                                    { text: "📹 How to List (አካዉንት ለመሸጥ)", callback_data: "vid_list" }
                                 ],
                                 [
-                                    { text: "🛡️ Verification Process", callback_data: "vid_verify" }
+                                    { text: "📹 How to Buy (አካዉንት ለመግዛት)", callback_data: "vid_buy" }
                                 ],
                                 [
-                                    { text: "🔄 Safe Transfer", callback_data: "vid_transfer" },
-                                    { text: "⚖️ Dispute Resolution", callback_data: "vid_dispute" }
+                                    { text: "🛡️ Verification Process (የማረጋገጥ ሂደት)", callback_data: "vid_verify" }
                                 ],
                                 [
-                                    { text: "🚀 Open Web App", web_app: { url: "https://adera-web.vercel.app/" } }
+                                    { text: "🔄 Safe Transfer (አስተማማኝ ርክክብ)", callback_data: "vid_transfer" }
+                                ],
+                                [
+                                    { text: "⚖️ Dispute Resolution (ቅሬታ አፈታት)", callback_data: "vid_dispute" }
+                                ],
+                                [
+                                    { text: "🚀 Open Web App (አፕሊኬሽኑን ክፈት)", web_app: { url: "https://adera-web.vercel.app/" } }
                                 ]
                             ]
                         }
