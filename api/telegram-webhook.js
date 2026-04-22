@@ -18,13 +18,21 @@ export default async function handler(req, res) {
             const text = update.message.text;
 
             if (text === '/start') {
-                const welcomeMessage = `*Adera Trading Guide: The Scam-Free Process 🛡️*
+                const welcomeMessage = `🌟 *Welcome to Adera Trading* 🌟
+_The Ultimate Scam-Free Digital Asset Marketplace_
 
-1. *Listing* (የራስህ ዋጋ fix አድርግ)
-2. *Buying & Verification* (ገንዘብህ ይረጋገጣል)
-3. *Safe Transfer* (Accountun ስታስረክብ ብሩ direct ይለቀቃል)
+We ensure 100% safety for both buyers and sellers. Here is how our secure process works:
 
-Select a tutorial video below to learn how it works!`;
+1️⃣ *Listing* _(የራስህ ዋጋ fix አድርግ)_
+Post your account securely and set your own price.
+
+2️⃣ *Buying & Verification* _(ገንዘብህ ይረጋገጣል)_
+We strictly verify the buyer's payment before any transfer begins.
+
+3️⃣ *Safe Transfer* _(Accountun ስታስረክብ ብሩ direct ይለቀቃል)_
+Once the account is securely handed over, the money is instantly released!
+
+👇 *Tap a button below to watch a quick tutorial!*`;
 
                 // Send the welcome text with an inline keyboard menu
                 await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
