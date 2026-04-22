@@ -73,23 +73,23 @@ Select a tutorial video below to learn how it works!`;
             // Video Directory Map
             const videoMap = {
                 'vid_list': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/q_auto/f_auto/v1776857303/adera_tutorial_list_eqagnr.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857303/adera_tutorial_list_eqagnr.mp4',
                     caption: '📹 *Tutorial: How to List your Account* (የራስህ ዋጋ fix አድርግ)'
                 },
                 'vid_buy': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/q_auto/f_auto/v1776857552/adera_tutorial_buy_ib3eaz.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857552/adera_tutorial_buy_ib3eaz.mp4',
                     caption: '📹 *Tutorial: How to Buy*'
                 },
                 'vid_verify': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/q_auto/f_auto/v1776857478/adera_tutorial_verify_gq9vc0.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857478/adera_tutorial_verify_gq9vc0.mp4',
                     caption: '🛡️ *Tutorial: Buying & Verification* (ገንዘብህ ይረጋገጣል)'
                 },
                 'vid_transfer': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/q_auto/f_auto/v1776857347/adera_tutorial_transfer_jux9yf.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857347/adera_tutorial_transfer_jux9yf.mp4',
                     caption: '🔄 *Tutorial: Safe Transfer* (Accountun ስታስረክብ ብሩ direct ይለቀቃል)'
                 },
                 'vid_dispute': {
-                    url: 'https://res.cloudinary.com/drabvwots/video/upload/q_auto/f_auto/v1776857459/adera_tutorial_dispute_ypowqs.mp4',
+                    url: 'https://res.cloudinary.com/drabvwots/video/upload/c_scale,w_480/q_auto:low/f_mp4/v1776857459/adera_tutorial_dispute_ypowqs.mp4',
                     caption: '⚖️ *Tutorial: Dispute Resolution*'
                 }
             };
