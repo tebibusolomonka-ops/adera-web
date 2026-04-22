@@ -119,10 +119,10 @@ const SellerProfile = () => {
                             <div className="flex items-center mb-1">
                                 <Star className="w-4 h-4 text-yellow-400 fill-current" />
                                 <span className="text-[14px] font-semibold text-white ml-1">
-                                    {profile?.rating ? profile.rating.toFixed(1) : 'New'}
+                                    {reviews.length > 0 ? (reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length).toFixed(1) : 'New'}
                                 </span>
                                 <span className="text-[12px] text-gray-400 ml-1 block">
-                                    ({profile?.ratingCount || 0} reviews)
+                                    ({reviews.length} reviews)
                                 </span>
                             </div>
                             {profile?.isVerified && (
