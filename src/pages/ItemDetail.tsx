@@ -4,6 +4,7 @@ import { ChevronLeft, Share2, AlertCircle, Star, X, Images, ChevronRight } from 
 import { getListing } from '../services/listing_service';
 import type { Listing } from '../services/listing_service';
 import { getUserProfile } from '../services/user_service';
+import { getSellerReviews } from '../services/ReviewService';
 
 // Formatter for Stats
 const formatStat = (num: number | string | undefined) => {
@@ -40,6 +41,7 @@ const ItemDetail = () => {
   const [loading, setLoading] = useState(false);
   const [isLightboxVisible, setLightboxVisible] = useState(false);
   const [sellerProfile, setSellerProfile] = useState<any>(null);
+  const [sellerReviews, setSellerReviews] = useState<any[]>([]);
 
   useEffect(() => {
     if (!itemFromState && id) {
@@ -62,6 +64,9 @@ const ItemDetail = () => {
       if (data.sellerId) {
           getUserProfile(data.sellerId).then(profile => {
               if (profile) setSellerProfile(profile);
+          });
+          getSellerReviews(data.sellerId).then(reviews => {
+              if (reviews) setSellerReviews(reviews);
           });
       }
   }, [data.sellerId]);
@@ -258,8 +263,8 @@ const ItemDetail = () => {
                 <div className="flex items-center bg-yellow-500/10 px-2.5 py-1.5 rounded-lg border border-yellow-500/20">
                     <Star className="w-3.5 h-3.5 text-yellow-500 fill-current" />
                     <span className="ml-1 text-[12px] font-bold text-yellow-500">
-                        {sellerProfile?.rating ? 
-                            `${sellerProfile.rating.toFixed(1)} (${sellerProfile.ratingCount || 0})` 
+                        {sellerReviews.length > 0 ? 
+                            `${(sellerReviews.reduce((sum, rev) => sum + rev.rating, 0) / sellerReviews.length).toFixed(1)} (${sellerReviews.length})` 
                             : 'New'}
                     </span>
                 </div>
