@@ -207,10 +207,10 @@ const Profile = () => {
           <div className="flex w-full justify-around pt-5 border-t border-white/10">
             <div className="flex flex-col items-center">
               <div className="flex items-center">
-                <span className="text-lg font-bold text-white mr-1">{profileData?.ratingCount ? '4.8' : '0.0'}</span>
+                <span className="text-lg font-bold text-white mr-1">{reviews.length > 0 ? (reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length).toFixed(1) : '0.0'}</span>
                 <Star className="w-4 h-4 text-yellow-400 fill-current" />
               </div>
-              <span className="text-xs font-semibold text-gray-500 mt-1">{profileData?.ratingCount || 0} Ratings</span>
+              <span className="text-xs font-semibold text-gray-500 mt-1">{reviews.length} Ratings</span>
             </div>
           </div>
         </div>
