@@ -1,3 +1,21 @@
+import admin from 'firebase-admin';
+
+// Initialize Firebase Admin (Singleton)
+if (!admin.apps.length) {
+    try {
+        const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT) : null;
+        if (serviceAccount) {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount)
+            });
+        } else {
+            admin.initializeApp(); // Fallback
+        }
+    } catch (e) {
+        console.error('Firebase Admin Init Error:', e);
+    }
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -18,6 +36,31 @@ export default async function handler(req, res) {
             const text = update.message.text;
 
             if (text === '/start') {
+                // Register user in Firestore
+                try {
+                    const db = admin.firestore();
+                    const tgUserId = `tg_${chatId}`;
+                    const userRef = db.collection('users').doc(tgUserId);
+                    const userDoc = await userRef.get();
+                    
+                    if (!userDoc.exists) {
+                        const chat = update.message.chat;
+                        await userRef.set({
+                            displayName: [chat.first_name, chat.last_name].filter(Boolean).join(' ') || chat.username || `User_${chatId}`,
+                            email: chat.username ? `@${chat.username}` : `telegram_${chatId}@adera.app`,
+                            phone: chat.username ? `Telegram: @${chat.username}` : `TG ID: ${chatId}`,
+                            isVerified: false,
+                            isBanned: false,
+                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                            numericId: chatId.toString(),
+                            source: 'telegram',
+                            photoURL: 'https://placehold.co/150/0088cc/ffffff?text=TG'
+                        });
+                    }
+                } catch (dbErr) {
+                    console.error("Error saving Telegram user to Firestore:", dbErr);
+                }
+
                 const welcomeMessage = `🌟 *Adera Masterclass: እንዴት በ 1 ደቂቃ Safe Trade እናደርጋለን?* 🚀
 _How to instantly List, Verify, Buy, ena securely Transfer accounts without getting scammed._
 
